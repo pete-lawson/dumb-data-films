@@ -1,9 +1,13 @@
 [project]
 name = "dumb-data-films"
 version = "0.1.0"
-description = "Add your description here"
+description = "Data exploration in preparation for a silly workshop teaching an end-to-end Python data analysis project."
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "beautifulsoup4>=4.14.2",
+    "duckdb>=1.4.2",
+    "jupyter>=1.1.1",
     "pandas>=2.3.3",
+    "requests>=2.32.5",
 ]
