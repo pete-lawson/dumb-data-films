@@ -10,6 +10,7 @@ import pandas as pd
 import requests
 from bs4 import BeautifulSoup
 import duckdb
+import re
 ```
 
 Scrape page for details
@@ -97,12 +98,30 @@ Breadcrumbs:
 
 ```{python}
 
-medium = ['m', 'm', 't', 'm', 'm', 'm', 'm', 'tv', 'm', 'tv', 'tv', 'm', 'm']
+medium = ['m', 'm', 'tv', 'm', 'm', 'm', 'm', 'tv', 'm', 'tv', 'tv', 'm', 'm']
 ```
 
 ```{python}
+# Call function
+def url_constructor(title, medium):
+    rt_title = re.sub(r"[^a-z0-9_]", "", title.lower().replace(" ", "_"))
+    return f'https://www.rottentomatoes.com/{medium}/{rt_title}'
+
+```
+
+```{python}
+rt_urls = []
 for title, med in zip(titles, medium):
-    # Call function
-def get_rt_scores(title):
-    
+    url = url_constructor(title, med)
+    rt_urls.append(url) 
+```
+
+
+```{python}
+def get_rt_ratings(url):
+    response = requests.get(url)
+    soup = BeautifulSoup(response.content, 'html.parser')
+    critics_score = soup.find("rt-text", attrs={"slot": "criticsScore", "role":"button"}).get_text(strip=True)
+    audience_score = soup.find("rt-text", attrs={"slot": "audienceScore", "role":"button"}).get_text(strip=True)
+    return {'critics': critics_score,'audience': audience_score}
 ```
