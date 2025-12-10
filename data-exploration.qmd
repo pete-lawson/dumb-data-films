@@ -15,7 +15,6 @@ import re
 
 Scrape page for details
 
-
 ```{python}
 response = requests.get('https://hub.jhu.edu/2015/10/13/johns-hopkins-on-film/')
 soup = BeautifulSoup(response.content, 'html.parser')
@@ -40,11 +39,6 @@ Get title ID
 
 ```{python}
 con = duckdb.connect()
-csv_data = con.read_csv('./data/title.akas.tsv')
-```
-
-```{python}
-con.sql("DESCRIBE csv_data")
 ```
 
 Query matching titles
@@ -52,12 +46,25 @@ Query matching titles
 df = con.execute(
     """
     SELECT *
-    FROM csv_data
-    WHERE title IN (SELECT * FROM UNNEST(?))
+    FROM read_csv_auto(
+    "./data/title.basics.tsv", 
+    header=True,
+    nullstr="\\N")
+    WHERE originalTitle IN (SELECT * FROM UNNEST(?))
 """,
     [titles],
 ).fetchdf()
 ```
+
+
+Data cleaning - find unique title and category
+
+```{python}
+df['startYear'] = pd.to_datetime(df['startYear'], format='%Y', errors='coerce')
+df['endYear'] = pd.to_datetime(df['endYear'], format='%Y', errors='coerce')
+# Locate first year of title, for all title and title type combinations
+df.loc[df.groupby(['titleType', 'primaryTitle']).startYear.idxmin().dropna()]
+``
 
 Questions:
 - For TV shows, do we return an average rating across all seasons/episodes?
@@ -89,7 +96,6 @@ soup = BeautifulSoup(response.content, 'html.parser')
 critics_score = soup.find("rt-text", attrs={"slot": "criticsScore", "role":"button"}).get_text(strip=True)
 
 audience_score = soup.find("rt-text", attrs={"slot": "audienceScore", "role":"button"}).get_text(strip=True)
-#print(soup.prettify())
 ```
 
 Breadcrumbs:
@@ -119,9 +125,33 @@ for title, med in zip(titles, medium):
 
 ```{python}
 def get_rt_ratings(url):
-    response = requests.get(url)
-    soup = BeautifulSoup(response.content, 'html.parser')
-    critics_score = soup.find("rt-text", attrs={"slot": "criticsScore", "role":"button"}).get_text(strip=True)
-    audience_score = soup.find("rt-text", attrs={"slot": "audienceScore", "role":"button"}).get_text(strip=True)
-    return {'critics': critics_score,'audience': audience_score}
+    try: 
+        response = requests.get(url)
+        response.raise_for_status()
+        soup = BeautifulSoup(response.content, 'html.parser')
+        critics_score = soup.find("rt-text", attrs={"slot": "criticsScore", "role":"button"}).get_text(strip=True)
+        audience_score = soup.find("rt-text", attrs={"slot": "audienceScore", "role":"button"}).get_text(strip=True)
+        return {'critics': critics_score,'audience': audience_score}
+    except requests.exceptions.HTTPError as err:
+        return {'critics': None,'audience': None}
+```
+
+
+```{python}
+audience_scores = []
+critics_scores = []
+for url in rt_urls:
+    scores = get_rt_ratings(url)
+    audience_scores.append(scores.get('audience'))
+    critics_scores.append(scores.get('critics'))
+```
+
+Construct dataframe of media and ratings
+
+```{python}
+data = {"media": titles,
+"audience_score": audience_scores, 
+"critics_scores": critics_scores}
+
+df = pd.DataFrame(data)
 ```
