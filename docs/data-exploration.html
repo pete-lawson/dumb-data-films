@@ -59,7 +59,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js" integrity="sha384-ZvpUoO/+PpLXR1lu4jmpXWu80pZlYUAfxl5NsBMWOEPSjUn/6Z/hRTt8+pR6L4N2" crossorigin="anonymous"></script><script src="site_libs/quarto-nav/quarto-nav.js"></script>
 <script src="site_libs/clipboard/clipboard.min.js"></script>
 <script src="site_libs/quarto-search/autocomplete.umd.js"></script>
 <script src="site_libs/quarto-search/fuse.min.js"></script>
@@ -103,20 +103,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     "search-label": "Search"
   }
 }</script>
+<script src="https://cdn.jsdelivr.net/npm/requirejs@2.3.6/require.min.js" integrity="sha384-c9c+LnTbwQ3aujuU7ULEPVvgLs+Fn6fJUvIGTsuu1ZcCf11fiEubah0ttpca4ntM sha384-6V1/AdqZRWk1KAlWbKBlGhN7VG4iE/yAZcO6NZPMF8od0vukrvr0tg4qY6NSrItx" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
 
 
 </head>
 
-<body class="fullcontent quarto-light">
+<body class="quarto-light">
 
 <div id="quarto-search-results"></div>
 <!-- content -->
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
+    </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content page-columns page-full" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
@@ -142,24 +147,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="scrape-jhu-titles-from-blog-post" class="level2">
+<section id="scrape-jhu-titles-from-blog-post" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="scrape-jhu-titles-from-blog-post">Scrape JHU titles from blog post</h2>
-<div id="1a7bead7" class="cell" data-execution_count="1">
+<div id="c3d3e3a2" class="cell" data-execution_count="1">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> itables <span class="im">import</span> show</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Scrape page for details</p>
-<div id="efb2d987" class="cell" data-execution_count="2">
+<div id="9a57e394" class="cell" data-execution_count="2">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(<span class="st">'https://hub.jhu.edu/2015/10/13/johns-hopkins-on-film/'</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(response.content, <span class="st">'html.parser'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="0933c8c8" class="cell" data-execution_count="3">
+<div id="6256338c" class="cell" data-execution_count="3">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(soup.prettify())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="5c10e865" class="cell" data-execution_count="4">
+<div id="e5829e2c" class="cell" data-execution_count="4">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>titles_raw <span class="op">=</span> soup.find_all(<span class="st">'strong'</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>titles_cleaned <span class="op">=</span> []</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> title <span class="kw">in</span> titles_raw:</span>
@@ -170,19 +176,105 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    title_year <span class="op">=</span> re.search(<span class="vs">r'</span><span class="kw">(</span><span class="fu">?&lt;</span><span class="vs">=</span><span class="ch">\(</span><span class="kw">)(</span><span class="dv">\d</span><span class="op">*</span><span class="kw">)</span><span class="vs">'</span>, title_year_raw).group(<span class="dv">0</span>)</span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    titles_cleaned.append({<span class="st">'Title'</span>: title_name, <span class="st">'Year'</span>: title_year})</span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>titles_data <span class="op">=</span> pd.DataFrame(titles_cleaned) </span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>titles_data.to_csv(<span class="st">'data/cleaned/jhu-titles.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>titles_data.to_csv(<span class="st">'data/cleaned/jhu-titles.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>show(</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    titles_data,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    scrollX<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    pageLength<span class="op">=</span><span class="dv">13</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<!--| quarto-html-table-processing: none -->
+<table id="itables_c71eb23d_5b10_4f01_ac59_89b8101b825b"><tbody><tr>
+    <td style="vertical-align:middle; text-align:left">
+    <a href="https://mwouts.github.io/itables/"><svg class="main-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="64" viewbox="0 0 500 400" style="font-family: 'Droid Sans', sans-serif;">
+    <g style="fill:#d9d7fc">
+        <path d="M100,400H500V357H100Z"></path>
+        <path d="M100,300H400V257H100Z"></path>
+        <path d="M0,200H400V157H0Z"></path>
+        <path d="M100,100H500V57H100Z"></path>
+        <path d="M100,350H500V307H100Z"></path>
+        <path d="M100,250H400V207H100Z"></path>
+        <path d="M0,150H400V107H0Z"></path>
+        <path d="M100,50H500V7H100Z"></path>
+    </g>
+    <g style="fill:#1a1366;stroke:#1a1366;">
+   <rect x="100" y="7" width="400" height="43">
+    <animate attributename="width" values="0;400;0" dur="5s" repeatcount="indefinite"></animate>
+      <animate attributename="x" values="100;100;500" dur="5s" repeatcount="indefinite"></animate>
+  </rect>
+        <rect x="0" y="107" width="400" height="43">
+    <animate attributename="width" values="0;400;0" dur="3.5s" repeatcount="indefinite"></animate>
+    <animate attributename="x" values="0;0;400" dur="3.5s" repeatcount="indefinite"></animate>
+  </rect>
+        <rect x="100" y="207" width="300" height="43">
+    <animate attributename="width" values="0;300;0" dur="3s" repeatcount="indefinite"></animate>
+    <animate attributename="x" values="100;100;400" dur="3s" repeatcount="indefinite"></animate>
+  </rect>
+        <rect x="100" y="307" width="400" height="43">
+    <animate attributename="width" values="0;400;0" dur="4s" repeatcount="indefinite"></animate>
+      <animate attributename="x" values="100;100;500" dur="4s" repeatcount="indefinite"></animate>
+  </rect>
+        <g style="fill:transparent;stroke-width:8; stroke-linejoin:round" rx="5">
+            <g transform="translate(45 50) rotate(-45)">
+                <circle r="33" cx="0" cy="0"></circle>
+                <rect x="-8" y="32" width="16" height="30"></rect>
+            </g>
+
+            <g transform="translate(450 152)">
+                <polyline points="-15,-20 -35,-20 -35,40 25,40 25,20"></polyline>
+                <rect x="-15" y="-40" width="60" height="60"></rect>
+            </g>
+
+            <g transform="translate(50 352)">
+                <polygon points="-35,-5 0,-40 35,-5"></polygon>
+                <polygon points="-35,10 0,45 35,10"></polygon>
+            </g>
+
+            <g transform="translate(75 250)">
+                <polyline points="-30,30 -60,0 -30,-30"></polyline>
+                <polyline points="0,30 -30,0 0,-30"></polyline>
+            </g>
+
+            <g transform="translate(425 250) rotate(180)">
+                <polyline points="-30,30 -60,0 -30,-30"></polyline>
+                <polyline points="0,30 -30,0 0,-30"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>
+</a>
+    Loading ITables v2.6.2 from the internet...
+    (need <a href="https://mwouts.github.io/itables/troubleshooting.html">help</a>?)</td>
+    </tr></tbody></table>
+<link href="https://www.unpkg.com/dt_for_itables@2.4.0/dt_bundle.css" rel="stylesheet">
+<script type="module">
+    import { ITable, jQuery as $ } from 'https://www.unpkg.com/dt_for_itables@2.4.0/dt_bundle.js';
+
+    document.querySelectorAll("#itables_c71eb23d_5b10_4f01_ac59_89b8101b825b:not(.dataTable)").forEach(table => {
+        if (!(table instanceof HTMLTableElement))
+            return;
+
+        let dt_args = {"scrollX": true, "pageLength": 13, "layout": {"topStart": "pageLength", "topEnd": "search", "bottomStart": "info", "bottomEnd": "paging"}, "style": {"table-layout": "auto", "width": "auto", "margin": "0", "caption-side": "bottom"}, "text_in_header_can_be_selected": true, "order": [], "classes": ["display", "nowrap"], "table_html": "<table><thead>\n    <tr style=\"text-align: right;\">\n      \n      <th>Title</th>\n      <th>Year</th>\n    </tr>\n  </thead></table>", "data_json": "[[\"Mondo Trasho\", \"1969\"], [\"Sleepless in Seattle\", \"1993\"], [\"The Curve\", \"1998\"], [\"Hopkins 24/7\", \"2000\"], [\"Head of State\", \"2003\"], [\"Something the Lord Made\", \"2004\"], [\"The Invasion\", \"2007\"], [\"Hopkins\", \"2008\"], [\"The Social Network\", \"2010\"], [\"Veep\", \"2012\"], [\"House of Cards\", \"2013\"], [\"Miss Susie Slagle's\", \"1946\"], [\"Gifted Hands: The Ben Carson Story\", \"2009\"]]"};
+        new ITable(table, dt_args);
+    });
+</script>
 </div>
-<p>The resulting <code>jhu-titles.csv</code> can be shared with learners, and the code to scrape the information can be shared post-session for those that are interested.</p>
-</section>
-<section id="retrieving-the-imdb-titles-that-correspond-to-the-titles-listed-in-jhu-titles.csv" class="level2">
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>Here I generate a cleaned version of the JHU titles listed on JHU article. <code>jhu-titles.csv</code> can be shared with learners, and the code to scrape the information can be shared post-session for those that are interested. There are still some data cleaning aspects remaining (years are integers).</p>
+</div></div></section>
+<section id="retrieving-the-imdb-titles-that-correspond-to-the-titles-listed-in-jhu-titles.csv" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="retrieving-the-imdb-titles-that-correspond-to-the-titles-listed-in-jhu-titles.csv">Retrieving the IMDB titles that correspond to the titles listed in <code>jhu-titles.csv</code></h2>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
 <p>This is more challenging than you might expect – there are a number of duplicate titles for some of the JHU titles, so we need to do a little data cleaning, as well as some manual data exploration.</p>
 <p>The IMDB tabular data is large, so I use <code>duckdb</code> here to allow me to treat them as a SQL database.</p>
-<div id="4aedfcf9" class="cell" data-execution_count="5">
+</div></div><div id="8460a6f8" class="cell" data-execution_count="5">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>con <span class="op">=</span> duckdb.<span class="ex">connect</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Query matching titles</p>
-<div id="68f10d49" class="cell" data-execution_count="6">
+<div id="9e6671e8" class="cell" data-execution_count="6">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Query for rows in IMDB title basics where the corresponding </span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># title and year are present for the titles scraped from the JHU site</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>titles <span class="op">=</span> con.execute(</span>
@@ -196,16 +288,101 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE tb.startYear = td.Year</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
 <span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>).fetchdf()</span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>titles.to_csv(<span class="st">'data/cleaned/imdb-title-matches.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>titles.to_csv(<span class="st">'data/cleaned/imdb-title-matches.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>show(</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    titles,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    scrollX<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    pageLength<span class="op">=</span><span class="dv">5</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<!--| quarto-html-table-processing: none -->
+<table id="itables_7f4fc1e6_621d_4612_bd87_abdd67766690"><tbody><tr>
+    <td style="vertical-align:middle; text-align:left">
+    <a href="https://mwouts.github.io/itables/"><svg class="main-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="64" viewbox="0 0 500 400" style="font-family: 'Droid Sans', sans-serif;">
+    <g style="fill:#d9d7fc">
+        <path d="M100,400H500V357H100Z"></path>
+        <path d="M100,300H400V257H100Z"></path>
+        <path d="M0,200H400V157H0Z"></path>
+        <path d="M100,100H500V57H100Z"></path>
+        <path d="M100,350H500V307H100Z"></path>
+        <path d="M100,250H400V207H100Z"></path>
+        <path d="M0,150H400V107H0Z"></path>
+        <path d="M100,50H500V7H100Z"></path>
+    </g>
+    <g style="fill:#1a1366;stroke:#1a1366;">
+   <rect x="100" y="7" width="400" height="43">
+    <animate attributename="width" values="0;400;0" dur="5s" repeatcount="indefinite"></animate>
+      <animate attributename="x" values="100;100;500" dur="5s" repeatcount="indefinite"></animate>
+  </rect>
+        <rect x="0" y="107" width="400" height="43">
+    <animate attributename="width" values="0;400;0" dur="3.5s" repeatcount="indefinite"></animate>
+    <animate attributename="x" values="0;0;400" dur="3.5s" repeatcount="indefinite"></animate>
+  </rect>
+        <rect x="100" y="207" width="300" height="43">
+    <animate attributename="width" values="0;300;0" dur="3s" repeatcount="indefinite"></animate>
+    <animate attributename="x" values="100;100;400" dur="3s" repeatcount="indefinite"></animate>
+  </rect>
+        <rect x="100" y="307" width="400" height="43">
+    <animate attributename="width" values="0;400;0" dur="4s" repeatcount="indefinite"></animate>
+      <animate attributename="x" values="100;100;500" dur="4s" repeatcount="indefinite"></animate>
+  </rect>
+        <g style="fill:transparent;stroke-width:8; stroke-linejoin:round" rx="5">
+            <g transform="translate(45 50) rotate(-45)">
+                <circle r="33" cx="0" cy="0"></circle>
+                <rect x="-8" y="32" width="16" height="30"></rect>
+            </g>
+
+            <g transform="translate(450 152)">
+                <polyline points="-15,-20 -35,-20 -35,40 25,40 25,20"></polyline>
+                <rect x="-15" y="-40" width="60" height="60"></rect>
+            </g>
+
+            <g transform="translate(50 352)">
+                <polygon points="-35,-5 0,-40 35,-5"></polygon>
+                <polygon points="-35,10 0,45 35,10"></polygon>
+            </g>
+
+            <g transform="translate(75 250)">
+                <polyline points="-30,30 -60,0 -30,-30"></polyline>
+                <polyline points="0,30 -30,0 0,-30"></polyline>
+            </g>
+
+            <g transform="translate(425 250) rotate(180)">
+                <polyline points="-30,30 -60,0 -30,-30"></polyline>
+                <polyline points="0,30 -30,0 0,-30"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>
+</a>
+    Loading ITables v2.6.2 from the internet...
+    (need <a href="https://mwouts.github.io/itables/troubleshooting.html">help</a>?)</td>
+    </tr></tbody></table>
+<link href="https://www.unpkg.com/dt_for_itables@2.4.0/dt_bundle.css" rel="stylesheet">
+<script type="module">
+    import { ITable, jQuery as $ } from 'https://www.unpkg.com/dt_for_itables@2.4.0/dt_bundle.js';
+
+    document.querySelectorAll("#itables_7f4fc1e6_621d_4612_bd87_abdd67766690:not(.dataTable)").forEach(table => {
+        if (!(table instanceof HTMLTableElement))
+            return;
+
+        let dt_args = {"scrollX": true, "pageLength": 5, "layout": {"topStart": "pageLength", "topEnd": "search", "bottomStart": "info", "bottomEnd": "paging"}, "style": {"table-layout": "auto", "width": "auto", "margin": "0", "caption-side": "bottom"}, "text_in_header_can_be_selected": true, "order": [], "classes": ["display", "nowrap"], "table_html": "<table><thead>\n    <tr style=\"text-align: right;\">\n      \n      <th>tconst</th>\n      <th>titleType</th>\n      <th>primaryTitle</th>\n      <th>originalTitle</th>\n      <th>isAdult</th>\n      <th>startYear</th>\n      <th>endYear</th>\n      <th>runtimeMinutes</th>\n      <th>genres</th>\n      <th>Title</th>\n      <th>Year</th>\n    </tr>\n  </thead></table>", "data_json": "[[\"tt1285016\", \"movie\", \"The Social Network\", \"The Social Network\", 0, 2010, \"None\", 120, \"Biography,Drama\", \"The Social Network\", \"2010\"], [\"tt1733401\", \"tvEpisode\", \"The Social Network\", \"The Social Network\", 0, 2010, \"None\", \"<NA>\", \"News\", \"The Social Network\", \"2010\"], [\"tt1759761\", \"tvSeries\", \"Veep\", \"Veep\", 0, 2012, \"2019\", 30, \"Comedy\", \"Veep\", \"2012\"], [\"tt2284859\", \"tvEpisode\", \"The Social Network\", \"The Social Network\", 0, 2010, \"None\", \"<NA>\", \"Talk-Show\", \"The Social Network\", \"2010\"], [\"tt1252438\", \"tvMiniSeries\", \"Hopkins\", \"Hopkins\", 0, 2008, \"2008\", \"<NA>\", \"Documentary\", \"Hopkins\", \"2008\"], [\"tt2026358\", \"tvEpisode\", \"The Social Network\", \"The Social Network\", 0, 2010, \"None\", \"<NA>\", \"Talk-Show\", \"The Social Network\", \"2010\"], [\"tt3022406\", \"tvEpisode\", \"The Social Network\", \"The Social Network\", 0, 2010, \"None\", \"<NA>\", \"Documentary\", \"The Social Network\", \"2010\"], [\"tt0108160\", \"movie\", \"Sleepless in Seattle\", \"Sleepless in Seattle\", 0, 1993, \"None\", 105, \"Comedy,Drama,Romance\", \"Sleepless in Seattle\", \"1993\"], [\"tt2827744\", \"tvEpisode\", \"House of Cards\", \"House of Cards\", 0, 2013, \"None\", \"<NA>\", \"Comedy,Short\", \"House of Cards\", \"2013\"], [\"tt33754364\", \"tvEpisode\", \"The Social Network\", \"The Social Network\", 0, 2010, \"None\", \"<NA>\", \"Short,Talk-Show\", \"The Social Network\", \"2010\"], [\"tt4110064\", \"tvEpisode\", \"The Social Network\", \"The Social Network\", 0, 2010, \"None\", \"<NA>\", \"Comedy\", \"The Social Network\", \"2010\"], [\"tt0594853\", \"tvEpisode\", \"Head of State\", \"Head of State\", 0, 2003, \"None\", \"<NA>\", \"Documentary,Short\", \"Head of State\", \"2003\"], [\"tt3173548\", \"video\", \"House of Cards\", \"House of Cards\", 0, 2013, \"None\", 6, \"Romance,Short\", \"House of Cards\", \"2013\"], [\"tt2422212\", \"movie\", \"House of Cards\", \"House of Cards\", 0, 2013, \"None\", 107, \"Action,Drama\", \"House of Cards\", \"2013\"], [\"tt0325537\", \"movie\", \"Head of State\", \"Head of State\", 0, 2003, \"None\", 95, \"Comedy\", \"Head of State\", \"2003\"], [\"tt0386792\", \"tvMovie\", \"Something the Lord Made\", \"Something the Lord Made\", 0, 2004, \"None\", 110, \"Biography,Drama\", \"Something the Lord Made\", \"2004\"], [\"tt22032292\", \"tvEpisode\", \"The Social Network\", \"The Social Network\", 0, 2010, \"None\", 15, \"News\", \"The Social Network\", \"2010\"], [\"tt0258356\", \"tvSeries\", \"Hopkins 24/7\", \"Hopkins 24/7\", 0, 2000, \"None\", 60, \"None\", \"Hopkins 24/7\", \"2000\"], [\"tt1856010\", \"tvSeries\", \"House of Cards\", \"House of Cards\", 0, 2013, \"2018\", 50, \"Drama,Thriller\", \"House of Cards\", \"2013\"], [\"tt0037917\", \"movie\", \"Miss Susie Slagle's\", \"Miss Susie Slagle's\", 0, 1946, \"None\", 88, \"Drama\", \"Miss Susie Slagle's\", \"1946\"], [\"tt0064683\", \"movie\", \"Mondo Trasho\", \"Mondo Trasho\", 0, 1969, \"None\", 95, \"Comedy\", \"Mondo Trasho\", \"1969\"], [\"tt1295085\", \"tvMovie\", \"Gifted Hands: The Ben Carson Story\", \"Gifted Hands: The Ben Carson Story\", 0, 2009, \"None\", 90, \"Biography,Drama\", \"Gifted Hands: The Ben Carson Story\", \"2009\"], [\"tt1799683\", \"tvEpisode\", \"The Social Network\", \"The Social Network\", 0, 2010, \"None\", 3, \"Comedy,Short\", \"The Social Network\", \"2010\"], [\"tt1808557\", \"short\", \"The Invasion\", \"The Invasion\", 0, 2007, \"None\", 5, \"Short\", \"The Invasion\", \"2007\"], [\"tt0427392\", \"movie\", \"The Invasion\", \"The Invasion\", 0, 2007, \"None\", 99, \"Sci-Fi,Thriller\", \"The Invasion\", \"2007\"]]"};
+        new ITable(table, dt_args);
+    });
+</script>
 </div>
-</section>
-<section id="selecting-matching-titles" class="level2">
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p>Here we generate a list of 24 matching titles. This is a good data cleaning task, as we have a number of duplicate titles. Year is a good way to match to the correct title here, so some joins with conditionals on date would be a good way to filter to relevant titles, for our learners. We can give them the dirty list of matches as a csv. This let’s us avoid issues with memory, or the odd nullstring IMDB is using (<code>\N</code>).</p>
+</div></div></section>
+<section id="selecting-matching-titles" class="level2 page-columns page-full">
 <h2 class="anchored" data-anchor-id="selecting-matching-titles">Selecting matching titles</h2>
 <p>Multiple joins with CTE’s</p>
-<div id="43484ded" class="cell" data-execution_count="7">
+<div id="1fecb27b" class="cell" data-execution_count="7">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Query for rows in IMDB title basics where the corresponding</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># title and year are present for the titles scraped from the JHU site</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> con.execute(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>imdb_jhu_matches <span class="op">=</span> con.execute(</span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="st">    WITH tb AS(</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT *</span></span>
@@ -234,14 +411,98 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT *</span></span>
 <span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM tr</span></span>
 <span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
-<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>).fetchdf()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>).fetchdf()</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>show(</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    imdb_jhu_matches,</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>    scrollX<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>    pageLength<span class="op">=</span><span class="dv">13</span></span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display">
+<!--| quarto-html-table-processing: none -->
+<table id="itables_8acc2b9c_84ac_4427_b6c9_24e45559d726"><tbody><tr>
+    <td style="vertical-align:middle; text-align:left">
+    <a href="https://mwouts.github.io/itables/"><svg class="main-svg" xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink" width="64" viewbox="0 0 500 400" style="font-family: 'Droid Sans', sans-serif;">
+    <g style="fill:#d9d7fc">
+        <path d="M100,400H500V357H100Z"></path>
+        <path d="M100,300H400V257H100Z"></path>
+        <path d="M0,200H400V157H0Z"></path>
+        <path d="M100,100H500V57H100Z"></path>
+        <path d="M100,350H500V307H100Z"></path>
+        <path d="M100,250H400V207H100Z"></path>
+        <path d="M0,150H400V107H0Z"></path>
+        <path d="M100,50H500V7H100Z"></path>
+    </g>
+    <g style="fill:#1a1366;stroke:#1a1366;">
+   <rect x="100" y="7" width="400" height="43">
+    <animate attributename="width" values="0;400;0" dur="5s" repeatcount="indefinite"></animate>
+      <animate attributename="x" values="100;100;500" dur="5s" repeatcount="indefinite"></animate>
+  </rect>
+        <rect x="0" y="107" width="400" height="43">
+    <animate attributename="width" values="0;400;0" dur="3.5s" repeatcount="indefinite"></animate>
+    <animate attributename="x" values="0;0;400" dur="3.5s" repeatcount="indefinite"></animate>
+  </rect>
+        <rect x="100" y="207" width="300" height="43">
+    <animate attributename="width" values="0;300;0" dur="3s" repeatcount="indefinite"></animate>
+    <animate attributename="x" values="100;100;400" dur="3s" repeatcount="indefinite"></animate>
+  </rect>
+        <rect x="100" y="307" width="400" height="43">
+    <animate attributename="width" values="0;400;0" dur="4s" repeatcount="indefinite"></animate>
+      <animate attributename="x" values="100;100;500" dur="4s" repeatcount="indefinite"></animate>
+  </rect>
+        <g style="fill:transparent;stroke-width:8; stroke-linejoin:round" rx="5">
+            <g transform="translate(45 50) rotate(-45)">
+                <circle r="33" cx="0" cy="0"></circle>
+                <rect x="-8" y="32" width="16" height="30"></rect>
+            </g>
+
+            <g transform="translate(450 152)">
+                <polyline points="-15,-20 -35,-20 -35,40 25,40 25,20"></polyline>
+                <rect x="-15" y="-40" width="60" height="60"></rect>
+            </g>
+
+            <g transform="translate(50 352)">
+                <polygon points="-35,-5 0,-40 35,-5"></polygon>
+                <polygon points="-35,10 0,45 35,10"></polygon>
+            </g>
+
+            <g transform="translate(75 250)">
+                <polyline points="-30,30 -60,0 -30,-30"></polyline>
+                <polyline points="0,30 -30,0 0,-30"></polyline>
+            </g>
+
+            <g transform="translate(425 250) rotate(180)">
+                <polyline points="-30,30 -60,0 -30,-30"></polyline>
+                <polyline points="0,30 -30,0 0,-30"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>
+</a>
+    Loading ITables v2.6.2 from the internet...
+    (need <a href="https://mwouts.github.io/itables/troubleshooting.html">help</a>?)</td>
+    </tr></tbody></table>
+<link href="https://www.unpkg.com/dt_for_itables@2.4.0/dt_bundle.css" rel="stylesheet">
+<script type="module">
+    import { ITable, jQuery as $ } from 'https://www.unpkg.com/dt_for_itables@2.4.0/dt_bundle.js';
+
+    document.querySelectorAll("#itables_8acc2b9c_84ac_4427_b6c9_24e45559d726:not(.dataTable)").forEach(table => {
+        if (!(table instanceof HTMLTableElement))
+            return;
+
+        let dt_args = {"scrollX": true, "pageLength": 13, "layout": {"topStart": "pageLength", "topEnd": "search", "bottomStart": "info", "bottomEnd": "paging"}, "style": {"table-layout": "auto", "width": "auto", "margin": "0", "caption-side": "bottom"}, "text_in_header_can_be_selected": true, "order": [], "classes": ["display", "nowrap"], "table_html": "<table><thead>\n    <tr style=\"text-align: right;\">\n      \n      <th>tconst</th>\n      <th>titleType</th>\n      <th>primaryTitle</th>\n      <th>originalTitle</th>\n      <th>isAdult</th>\n      <th>startYear</th>\n      <th>endYear</th>\n      <th>runtimeMinutes</th>\n      <th>genres</th>\n      <th>Title</th>\n      <th>Year</th>\n      <th>averageRating</th>\n      <th>numVotes</th>\n    </tr>\n  </thead></table>", "data_json": "[[\"tt1285016\", \"movie\", \"The Social Network\", \"The Social Network\", 0, 2010, \"None\", 120, \"Biography,Drama\", \"The Social Network\", \"2010\", 7.8, 805476], [\"tt1856010\", \"tvSeries\", \"House of Cards\", \"House of Cards\", 0, 2013, \"2018\", 50, \"Drama,Thriller\", \"House of Cards\", \"2013\", 8.6, 553441], [\"tt0258356\", \"tvSeries\", \"Hopkins 24/7\", \"Hopkins 24/7\", 0, 2000, \"None\", 60, \"None\", \"Hopkins 24/7\", \"2000\", 6.9, 30], [\"tt0427392\", \"movie\", \"The Invasion\", \"The Invasion\", 0, 2007, \"None\", 99, \"Sci-Fi,Thriller\", \"The Invasion\", \"2007\", 5.9, 86970], [\"tt1252438\", \"tvMiniSeries\", \"Hopkins\", \"Hopkins\", 0, 2008, \"2008\", \"<NA>\", \"Documentary\", \"Hopkins\", \"2008\", 8.6, 101], [\"tt0037917\", \"movie\", \"Miss Susie Slagle's\", \"Miss Susie Slagle's\", 0, 1946, \"None\", 88, \"Drama\", \"Miss Susie Slagle's\", \"1946\", 6.3, 162], [\"tt0064683\", \"movie\", \"Mondo Trasho\", \"Mondo Trasho\", 0, 1969, \"None\", 95, \"Comedy\", \"Mondo Trasho\", \"1969\", 5.8, 1638], [\"tt1295085\", \"tvMovie\", \"Gifted Hands: The Ben Carson Story\", \"Gifted Hands: The Ben Carson Story\", 0, 2009, \"None\", 90, \"Biography,Drama\", \"Gifted Hands: The Ben Carson Story\", \"2009\", 7.4, 19871], [\"tt1759761\", \"tvSeries\", \"Veep\", \"Veep\", 0, 2012, \"2019\", 30, \"Comedy\", \"Veep\", \"2012\", 8.4, 70031], [\"tt2422212\", \"movie\", \"House of Cards\", \"House of Cards\", 0, 2013, \"None\", 107, \"Action,Drama\", \"House of Cards\", \"2013\", 2.1, 371], [\"tt0594853\", \"tvEpisode\", \"Head of State\", \"Head of State\", 0, 2003, \"None\", \"<NA>\", \"Documentary,Short\", \"Head of State\", \"2003\", 4.8, 11], [\"tt0108160\", \"movie\", \"Sleepless in Seattle\", \"Sleepless in Seattle\", 0, 1993, \"None\", 105, \"Comedy,Drama,Romance\", \"Sleepless in Seattle\", \"1993\", 6.8, 202604], [\"tt0325537\", \"movie\", \"Head of State\", \"Head of State\", 0, 2003, \"None\", 95, \"Comedy\", \"Head of State\", \"2003\", 5.5, 22021], [\"tt0386792\", \"tvMovie\", \"Something the Lord Made\", \"Something the Lord Made\", 0, 2004, \"None\", 110, \"Biography,Drama\", \"Something the Lord Made\", \"2004\", 8.0, 17036]]"};
+        new ITable(table, dt_args);
+    });
+</script>
 </div>
-<p>Data cleaning - find unique title and category</p>
-<div id="fff013ac" class="cell" data-execution_count="8">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'startYear'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'startYear'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'%Y'</span>, errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'endYear'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'endYear'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'%Y'</span>, errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="margin-aside">
+<p><code>title.basics.tsv</code> is is pretty large here (1 GB). Here I use SQL to filter titles to the relevant year, and join to IMDB ratings. A good option here would be to create a random subset of the <code>title.basics.tsv</code>, that also includes all the records from our JHU titles. Then our learners can join on IMDB ratings (that’s ~ 30 MB so not bad)</p>
+</div></div><div id="c8a54be1" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>imdb_jhu_matches[<span class="st">'startYear'</span>] <span class="op">=</span> pd.to_datetime(imdb_jhu_matches[<span class="st">'startYear'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'%Y'</span>, errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>imdb_jhu_matches[<span class="st">'endYear'</span>] <span class="op">=</span> pd.to_datetime(imdb_jhu_matches[<span class="st">'endYear'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'%Y'</span>, errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Locate first year of title, for all title and title type combinations</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>df.loc[df.groupby([<span class="st">'titleType'</span>, <span class="st">'primaryTitle'</span>]).startYear.idxmin().dropna()]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>imdb_jhu_matches.loc[imdb_jhu_matches.groupby([<span class="st">'titleType'</span>, <span class="st">'primaryTitle'</span>]).startYear.idxmin().dropna()]</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Questions:</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#- For TV shows, do we return an average rating across all seasons/episodes?</span></span>
@@ -257,32 +518,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>How do we disambiguate House of Cards show from 1968 movie.</li>
 </ul>
 <p>Scrape rotten tomatoes for individual titles:</p>
-<div id="cce806bf" class="cell" data-execution_count="9">
+<div id="5363e78b" class="cell" data-execution_count="9">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(<span class="st">'https://www.rottentomatoes.com/tv/house-of-cards'</span>)</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(response.content, <span class="st">'html.parser'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="474f60c7" class="cell" data-execution_count="10">
+<div id="20a6a166" class="cell" data-execution_count="10">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>critics_score <span class="op">=</span> soup.find(<span class="st">"rt-text"</span>, attrs<span class="op">=</span>{<span class="st">"slot"</span>: <span class="st">"criticsScore"</span>, <span class="st">"role"</span>:<span class="st">"button"</span>}).get_text(strip<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>audience_score <span class="op">=</span> soup.find(<span class="st">"rt-text"</span>, attrs<span class="op">=</span>{<span class="st">"slot"</span>: <span class="st">"audienceScore"</span>, <span class="st">"role"</span>:<span class="st">"button"</span>}).get_text(strip<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Breadcrumbs: - Turn scraper into function. - Add TV or Movie to titles, as Rotten Tomatos URLs are either m or tv depending, i.e.&nbsp;https://www.rottentomatoes.com/tv/house_of_cards</p>
-<div id="3e8f3627" class="cell" data-execution_count="11">
+<div id="9e2d01d5" class="cell" data-execution_count="11">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>medium <span class="op">=</span> [<span class="st">'m'</span>, <span class="st">'m'</span>, <span class="st">'tv'</span>, <span class="st">'m'</span>, <span class="st">'m'</span>, <span class="st">'m'</span>, <span class="st">'m'</span>, <span class="st">'tv'</span>, <span class="st">'m'</span>, <span class="st">'tv'</span>, <span class="st">'tv'</span>, <span class="st">'m'</span>, <span class="st">'m'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="acb9ebbd" class="cell" data-execution_count="12">
+<div id="9f035795" class="cell" data-execution_count="12">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Call function</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> url_constructor(title, medium):</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    rt_title <span class="op">=</span> re.sub(<span class="vs">r"</span><span class="pp">[^a-z0-9_]</span><span class="vs">"</span>, <span class="st">""</span>, title.lower().replace(<span class="st">" "</span>, <span class="st">"_"</span>))</span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f'https://www.rottentomatoes.com/</span><span class="sc">{</span>medium<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>rt_title<span class="sc">}</span><span class="ss">'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="90375433" class="cell" data-execution_count="13">
+<div id="267a2d7a" class="cell" data-execution_count="13">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>rt_urls <span class="op">=</span> []</span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> title, med <span class="kw">in</span> <span class="bu">zip</span>(titles, medium):</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> url_constructor(title, med)</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    rt_urls.append(url) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="15934f06" class="cell" data-execution_count="14">
+<div id="e6e717e1" class="cell" data-execution_count="14">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_rt_ratings(url):</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>: </span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> requests.get(url)</span>
@@ -294,7 +555,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> requests.exceptions.HTTPError <span class="im">as</span> err:</span>
 <span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {<span class="st">'critics'</span>: <span class="va">None</span>,<span class="st">'audience'</span>: <span class="va">None</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="4b065260" class="cell" data-execution_count="15">
+<div id="b1d8951f" class="cell" data-execution_count="15">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>audience_scores <span class="op">=</span> []</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>critics_scores <span class="op">=</span> []</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> url <span class="kw">in</span> rt_urls:</span>
@@ -303,7 +564,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    critics_scores.append(scores.get(<span class="st">'critics'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Construct dataframe of media and ratings</p>
-<div id="983c1eee" class="cell" data-execution_count="16">
+<div id="7bfe384f" class="cell" data-execution_count="16">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {<span class="st">"media"</span>: titles,</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="st">"audience_score"</span>: audience_scores, </span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="st">"critics_scores"</span>: critics_scores}</span>
