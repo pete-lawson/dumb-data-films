@@ -27,15 +27,26 @@ print(soup.prettify())
 
 
 ```{python}
-titles_raw = soup.find_all('em')
-titles = []
-# Iterate all titles except last (not a valid title)
-for title in titles_raw[0:-1]:
-    titles.extend(title.contents)
+titles_raw = soup.find_all('strong')
+titles_cleaned = []
+for title in titles_raw:
+    title_name_element = title.find('em')
+    title_name = title_name_element.getText(strip=True)
+    title_name_element.extract()
+    title_year_raw = title.get_text(strip=True)
+    title_year = re.search(r'(?<=\()(\d*)', title_year_raw).group(0)
+    titles_cleaned.append({'Title': title_name, 'Year': title_year})
+titles_data = pd.DataFrame(titles_cleaned) 
+titles_data.to_csv('data/cleaned/jhu-titles.csv', index=False)
 ```
 
+The resulting `jhu-titles.csv` can be shared with learners, and the code to scrape the information can be shared post-session for those that are interested.
 
-Get title ID
+## Retrieving the IMDB titles that correspond to the titles listed in `jhu-titles.csv`
+
+This is more challenging than you might expect – there are a number of duplicate titles for some of the JHU titles, so we need to do a little data cleaning, as well as some manual data exploration. 
+
+The IMDB tabular data is large, so I use `duckdb` here to allow me to treat them as a SQL database. 
 
 ```{python}
 con = duckdb.connect()
@@ -43,19 +54,63 @@ con = duckdb.connect()
 
 Query matching titles
 ```{python}
-df = con.execute(
+# Query for rows in IMDB title basics where the corresponding 
+# title and year are present for the titles scraped from the JHU site
+titles = con.execute(
     """
     SELECT *
     FROM read_csv_auto(
     "./data/title.basics.tsv", 
     header=True,
-    nullstr="\\N")
-    WHERE originalTitle IN (SELECT * FROM UNNEST(?))
-""",
-    [titles],
+    nullstr="\\N") as tb
+    JOIN titles_data as td ON tb.originalTitle = td.Title
+    WHERE tb.startYear = td.Year
+    """
 ).fetchdf()
+titles.to_csv('data/cleaned/imdb-title-matches.csv', index=False)
 ```
 
+## Selecting matching titles
+
+
+
+Multiple joins with CTE's
+
+```{python}
+# Query for rows in IMDB title basics where the corresponding
+# title and year are present for the titles scraped from the JHU site
+df = con.execute(
+    """
+    WITH tb AS(
+    SELECT *
+    FROM read_csv_auto(
+        "./data/title.basics.tsv", 
+        header=True,
+        nullstr="\\N"
+    ) as titles_basics
+    JOIN titles_data 
+    ON titles_basics.originalTitle = titles_data.Title
+    WHERE titles_basics.startYear = titles_data.Year),
+
+    tr AS(
+        SELECT 
+        tb.*,
+        tr.averageRating,
+        tr.numVotes 
+    FROM tb
+    JOIN read_csv_auto(
+        "./data/title.ratings.tsv",
+        header=True,
+        nullstr="\\N"
+    ) as tr
+    ON tb.tconst = tr.tconst
+    )
+    SELECT *
+    FROM tr
+    """
+).fetchdf()
+
+```
 
 Data cleaning - find unique title and category
 
@@ -64,16 +119,12 @@ df['startYear'] = pd.to_datetime(df['startYear'], format='%Y', errors='coerce')
 df['endYear'] = pd.to_datetime(df['endYear'], format='%Y', errors='coerce')
 # Locate first year of title, for all title and title type combinations
 df.loc[df.groupby(['titleType', 'primaryTitle']).startYear.idxmin().dropna()]
-``
 
-Questions:
-- For TV shows, do we return an average rating across all seasons/episodes?
-  
+#Questions:
+#- For TV shows, do we return an average rating across all seasons/episodes?
 
-Get rotten tomato ratings:
+#Get rotten tomato ratings:
 
-
-```{python}
 rt_scores = pd.read_csv('./data/movie_info.csv')
 title_rt_scores = rt_scores[rt_scores['title'].isin(titles)]
 ```
@@ -112,7 +163,6 @@ medium = ['m', 'm', 'tv', 'm', 'm', 'm', 'm', 'tv', 'm', 'tv', 'tv', 'm', 'm']
 def url_constructor(title, medium):
     rt_title = re.sub(r"[^a-z0-9_]", "", title.lower().replace(" ", "_"))
     return f'https://www.rottentomatoes.com/{medium}/{rt_title}'
-
 ```
 
 ```{python}
@@ -149,6 +199,7 @@ for url in rt_urls:
 Construct dataframe of media and ratings
 
 ```{python}
+#| eval: false
 data = {"media": titles,
 "audience_score": audience_scores, 
 "critics_scores": critics_scores}

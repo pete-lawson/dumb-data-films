@@ -1,0 +1,2261 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.8.25">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Pete Lawson">
+
+<title>data-exploration</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7b89279ff1a6dce999919e0e67d4d9ec.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-ff63373b1067ca6f91cf1456aa1f00a2.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-search-results"></div>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Pete Lawson </p>
+          </div>
+  </div>
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="scrape-jhu-titles-from-blog-post" class="level2">
+<h2 class="anchored" data-anchor-id="scrape-jhu-titles-from-blog-post">Scrape JHU titles from blog post</h2>
+<div id="45812211" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> duckdb</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Scrape page for details</p>
+<div id="8b86d569" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(<span class="st">'https://hub.jhu.edu/2015/10/13/johns-hopkins-on-film/'</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(response.content, <span class="st">'html.parser'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="43467d36" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(soup.prettify())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html class="no-js" lang="en"&gt;
+ &lt;head&gt;
+  &lt;script&gt;
+   dataLayer = [];
+  &lt;/script&gt;
+  &lt;!-- Google Tag Manager --&gt;
+  &lt;script&gt;
+   (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&amp;l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5K9DL47');
+  &lt;/script&gt;
+  &lt;!-- End Google Tag Manager --&gt;
+  &lt;meta content="16d71d483f9f44c8861698b5fe4f3562-2657133c5c934b1b-0" name="sentry-trace"/&gt;
+  &lt;meta content="sentry-trace_id=16d71d483f9f44c8861698b5fe4f3562,sentry-sample_rate=0.01,sentry-transaction=%2F%3Ayear%2F%3Amonth%2F%3Aday%2F%3Aslug,sentry-public_key=d3381ccef82942cbb78e76484a69b204,sentry-environment=production" name="baggage"/&gt;
+  &lt;meta charset="utf-8"/&gt;
+  &lt;meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/&gt;
+  &lt;meta content="IE=edge" http-equiv="X-UA-Compatible"/&gt;
+  &lt;meta content="The Hub" property="og:site_name"&gt;
+   &lt;meta content="summary_large_image" name="twitter:card"&gt;
+    &lt;meta content="743066030" name="twitter:site:id"&gt;
+     &lt;meta content="origin" name="referrer"/&gt;
+     &lt;meta content="Johns Hopkins on film: A guide to university cameos big and small" property="og:title"/&gt;
+     &lt;meta content="Homewood campus, Peabody Conservatory, East Baltimore campus have made cameos big and small over the years" name="description"/&gt;
+     &lt;meta content="Homewood campus, Peabody Conservatory, East Baltimore campus have made cameos big and small over the years" property="og:description"&gt;
+      &lt;meta content="article" property="og:type"&gt;
+       &lt;meta content="https://hub.jhu.edu/2015/10/13/johns-hopkins-on-film/" property="og:url"&gt;
+        &lt;meta content="2015-10-13T10:00:00-04:00" property="article:published_time"/&gt;
+        &lt;meta content="https://www.facebook.com/johnshopkinsuniversity" property="article:publisher"/&gt;
+        &lt;meta content="https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_1300/public/social_network.jpg" property="og:image"/&gt;
+        &lt;meta content="https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_1300/public/social_network.jpg" property="og:image:secure_url"/&gt;
+        &lt;meta content="Filming of 'The Social Network' at JHU's Homewood campus" property="og:image:alt"/&gt;
+        &lt;meta content="film" property="article:tag"/&gt;
+        &lt;meta content="movies" property="article:tag"/&gt;
+        &lt;meta content="university history" property="article:tag"/&gt;
+        &lt;meta content="article" name="content_type"/&gt;
+        &lt;title&gt;
+         Johns Hopkins on film: A guide to university cameos big and small | Hub
+        &lt;/title&gt;
+        &lt;link href="https://hub.jhu.edu/2015/10/13/johns-hopkins-on-film/" rel="canonical"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/apple-touch-icon-57x57.png" rel="apple-touch-icon" sizes="57x57"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/apple-touch-icon-60x60.png" rel="apple-touch-icon" sizes="60x60"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/apple-touch-icon-72x72.png" rel="apple-touch-icon" sizes="72x72"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/apple-touch-icon-76x76.png" rel="apple-touch-icon" sizes="76x76"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/apple-touch-icon-114x114.png" rel="apple-touch-icon" sizes="114x114"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/apple-touch-icon-120x120.png" rel="apple-touch-icon" sizes="120x120"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/apple-touch-icon-144x144.png" rel="apple-touch-icon" sizes="144x144"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/apple-touch-icon-152x152.png" rel="apple-touch-icon" sizes="152x152"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/apple-touch-icon-180x180.png" rel="apple-touch-icon" sizes="180x180"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/favicon-194x194.png" rel="icon" sizes="194x194" type="image/png"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/favicon-96x96.png" rel="icon" sizes="96x96" type="image/png"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/android-chrome-192x192.png" rel="icon" sizes="192x192" type="image/png"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png"/&gt;
+        &lt;link href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/manifest.json" rel="manifest"/&gt;
+        &lt;link color="#418fde" href="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/safari-pinned-tab.svg" rel="mask-icon"/&gt;
+        &lt;meta content="HUB" name="apple-mobile-web-app-title"/&gt;
+        &lt;meta content="HUB" name="application-name"/&gt;
+        &lt;meta content="#2d89ef" name="msapplication-TileColor"/&gt;
+        &lt;meta content="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/icons/mstile-144x144.png" name="msapplication-TileImage"/&gt;
+        &lt;meta content="#ffffff" name="theme-color"/&gt;
+        &lt;link href="https://hub.jhu.edu/feed/" rel="alternate" title="Hub" type="application/rss+xml"&gt;
+         &lt;script id="jhu-nonces" type="text/javascript"&gt;
+          /* &lt;![CDATA[ */
+var jhu_nonces = {"announcement_listings":"0cc931a2a2","create_conversion":"ada49264c5","event_listings":"359955bc7e","facebook_shares":"ca981f3534","email_friend":"f64b642766","google_search":"f8993ab6b3","site_alert":"8793fd845b","rave_alert":"b94cd03e20"};
+var jhu_nonces_timestamp = "2026-01-12 13:25:26";
+/* ]]&gt; */
+         &lt;/script&gt;
+         &lt;meta content="max-image-preview:large" name="robots"&gt;
+          &lt;link href="//www.google.com" rel="dns-prefetch"&gt;
+           &lt;link href="https://hub.jhu.edu/wp/wp-includes/css/dist/block-library/style.min.css?ver=6.6.2" id="wp-block-library-css" media="all" rel="stylesheet" type="text/css"&gt;
+            &lt;style id="safe-svg-svg-icon-style-inline-css" type="text/css"&gt;
+             .safe-svg-cover{text-align:center}.safe-svg-cover .safe-svg-inside{display:inline-block;max-width:100%}.safe-svg-cover svg{height:100%;max-height:100%;max-width:100%;width:100%}
+            &lt;/style&gt;
+            &lt;style id="classic-theme-styles-inline-css" type="text/css"&gt;
+             /*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+            &lt;/style&gt;
+            &lt;link href="https://hub.jhu.edu/assets/themes/wphub/assets/css/base.css?ver=e8e9c399c430944b7dd1" id="jhu-base-css" media="all" rel="stylesheet" type="text/css"&gt;
+             &lt;link href="https://hub.jhu.edu/assets/themes/wphub/assets/css/modules.css?ver=9f8cd280c3d00cd9f07d" id="jhu-modules-css" media="all" rel="stylesheet" type="text/css"&gt;
+              &lt;link href="https://hub.jhu.edu/assets/themes/wphub/assets/css/print.css?ver=114431535a1ba12e505c" id="jhu-print-css" media="print" rel="stylesheet" type="text/css"&gt;
+               &lt;link href="https://hub.jhu.edu/assets/themes/wphub/assets/css/hub.css?ver=2e14c322c6f431a5616d" id="jhu-hub-css" media="all" rel="stylesheet" type="text/css"&gt;
+                &lt;script id="wp-polyfill-js" src="https://hub.jhu.edu/wp/wp-includes/js/dist/vendor/wp-polyfill.min.js?ver=3.15.0" type="text/javascript"&gt;
+                &lt;/script&gt;
+                &lt;script id="jhu-logger-js-extra" type="text/javascript"&gt;
+                 /* &lt;![CDATA[ */
+var jhu_logger_data = {"dsn":"https:\/\/d3381ccef82942cbb78e76484a69b204@o106740.ingest.sentry.io\/4504554993680384","trace":"1","sample_rate":"0.01","transaction_name":"\/:year\/:month\/:day\/:slug"};
+/* ]]&gt; */
+                &lt;/script&gt;
+                &lt;script id="jhu-logger-js" src="https://hub.jhu.edu/assets/themes/shared/assets/js/logger.js?ver=4d30fb524601e9630d0b" type="text/javascript"&gt;
+                &lt;/script&gt;
+                &lt;script id="jhu-rave-js" src="https://hub.jhu.edu/assets/themes/shared/assets/js/rave.js?ver=55f50a251fb3efebe7fb" type="text/javascript"&gt;
+                &lt;/script&gt;
+                &lt;script id="jhu-site-alert-js" src="https://hub.jhu.edu/assets/themes/shared/assets/js/site-alert.js?ver=1471a85ac3384b228702" type="text/javascript"&gt;
+                &lt;/script&gt;
+                &lt;script id="jhu-modernizr-js" src="https://hub.jhu.edu/assets/themes/shared/assets/js/modernizr.js?ver=291b8c292d0735d630d5" type="text/javascript"&gt;
+                &lt;/script&gt;
+                &lt;link href="https://hub.jhu.edu/wp-json/" rel="https://api.w.org/"&gt;
+                &lt;/link&gt;
+               &lt;/link&gt;
+              &lt;/link&gt;
+             &lt;/link&gt;
+            &lt;/link&gt;
+           &lt;/link&gt;
+          &lt;/link&gt;
+         &lt;/meta&gt;
+        &lt;/link&gt;
+       &lt;/meta&gt;
+      &lt;/meta&gt;
+     &lt;/meta&gt;
+    &lt;/meta&gt;
+   &lt;/meta&gt;
+  &lt;/meta&gt;
+ &lt;/head&gt;
+ &lt;body class="layout-hub"&gt;
+  &lt;a class="skip-to-main" href="#main"&gt;
+   Skip to main content
+  &lt;/a&gt;
+  &lt;!-- Google Tag Manager (noscript) --&gt;
+  &lt;noscript&gt;
+   &lt;iframe height="0" src="https://www.googletagmanager.com/ns.html?id=GTM-5K9DL47" style="display:none;visibility:hidden" width="0"&gt;
+   &lt;/iframe&gt;
+  &lt;/noscript&gt;
+  &lt;!-- End Google Tag Manager (noscript) --&gt;
+  &lt;div class="banner-notifications"&gt;
+   &lt;!--[if lt IE 9]&gt;
+      &lt;p class="browse-happy"&gt;You are using an &lt;strong&gt;outdated&lt;/strong&gt; browser. Please upgrade your browser to improve your experience.&lt;/p&gt;
+      &lt;![endif]--&gt;
+   &lt;div class="rave-alert-container"&gt;
+   &lt;/div&gt;
+   &lt;div class="site-alert-container"&gt;
+   &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;!-- 
+Johns Hopkins University Sesquicentennial Celebration Bar
+--
+A standalone element to be added to any website wishing to celebrate the 150th anniversary of the founding of Johns Hopkins University. 
+
+Implementation:
+Copy the code starting at the "START COPY HERE" and ending at "END COPY HERE" comments. Place the code at the top of your website's HTML so that it appears at the top-most edge of the screen on first view and runs the full width of the screen. Typically, this is just after the opening &lt;body&gt; tag of your .html file. However, if your website has a "Skip to Main Content" feature, place the code below this feature.
+
+The bar is provided in two color schemes: dark and light. The color scheme is defined by assigning the value of the jhu-150th-bar-style attribute to either "dark" or "light." The dark version has a Heritage Blue background, while the light version has a white background. Both are equally appropriate and neither is preferred over the other. Two color schemes are provided to allow for the best possible legibility and separation from your website's existing design to guarantee it presents as its own distinct object. For example, use the light version if the top of your site is using a heritage blue background.
+
+The bar uses Proxima Nova Medium (500) provided by JHU's license with Adobe Fonts. If your existing website already loads this font and weight you may remove the additional @import line to reduce page load time. 
+
+Note: Aside from selecting the light or dark version, you may not alter the provided colors, layout, responsive breakpoints, identifiers, or messaging in any way without prior authorization from University Communications.
+--&gt;
+  &lt;!-- START COPY HERE --&gt;
+  &lt;a href="https://150.jhu.edu" id="jhu-150th-bar" jhu-150th-bar-style="light" parent="_blank"&gt;
+   &lt;style&gt;
+    /* Remove the following @import line if your website is already loading Proxima Nova Medium (500) */
+    @import url("https://use.typekit.net/tgg3dge.css");
+    
+    :root {
+      --jhu-brand-heritage-blue: #002D72;
+      --jhu-blue-50: #0077D8;
+      --jhu-brand-spirit-blue: #68ACE5;
+      --jhu-brand-white: #FFFFFF;
+      --jhu-150th-bar-accent: var(--jhu-brand-spirit-blue);
+      --jhu-150th-bar-background: var(--jhu-brand-heritage-blue);
+      --jhu-150th-bar-color: var(--jhu-brand-white);
+      --jhu-150th-bar-secondary: var(--jhu-brand-spirit-blue);
+      --jhu-150th-bar-height: 52px;
+
+      @media (1020px &lt;= width) {
+        --jhu-150th-bar-height: 68px;
+      }
+    }
+
+    #jhu-150th-bar {
+      align-items: center;
+      background: var(--jhu-150th-bar-background);
+      box-sizing: border-box;
+      color: var(--jhu-150th-bar-color);
+      display: grid;
+      font-family: proxima-nova, sans-serif;
+      font-weight: 500;
+      font-size: min(3vw, 12px);
+      font-style: normal;
+      gap: 0;
+      grid-template-areas: 
+        "logo name"
+        "logo tagline";
+      grid-template-columns: 60px 1fr;
+      height: var(--jhu-150th-bar-height);
+      letter-spacing: 0.05em;
+      margin: 0;
+      padding: 0 1em;
+      text-decoration: none;
+      text-transform: uppercase;
+      width: 100%;
+
+      @media (460px &lt;= width) {
+        grid-template-columns: 90px 1fr;
+        letter-spacing: 0.1em;
+      }
+
+      @media (800px &lt;= width) {
+        gap: 0 1em;
+        grid-template-areas: "name logo tagline";
+        grid-template-columns: 1fr 72px 1fr;
+      }
+
+      @media (1020px &lt;= width) {
+        font-size: clamp(16px, 1.56vw, 21px);
+        grid-template-columns: 1fr 108px 1fr;
+      }
+    }
+
+    #jhu-150th-bar[jhu-150th-bar-style="light"] {
+      --jhu-150th-bar-accent: var(--jhu-brand-spirit-blue);
+      --jhu-150th-bar-background: var(--jhu-brand-white);
+      --jhu-150th-bar-color: var(--jhu-brand-heritage-blue);
+      --jhu-150th-bar-secondary: var(--jhu-blue-50);
+    }
+
+    #jhu-150th-bar * {
+      box-sizing: inherit;
+      font-size: 1em;
+      line-height: 1.4;
+      margin: 0;
+      padding: 0;
+      vertical-align: middle;
+    }
+
+    #jhu-150th-bar p {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: nowrap;
+    }
+
+    #jhu-150th-bar .jhu-150th-bar-sep {
+      background-color: var(--jhu-150th-bar-accent);
+      color: red;
+      display: inline-block;
+      height: 1.4em;
+      margin: 0 0.5em;
+      width: 1px;
+
+      @media (480px &lt;= width) {
+        margin: 0 1em;
+        width: 2px;
+      }
+    }
+
+    #jhu-150th-bar #jhu-150th-name {
+      grid-area: name;
+      justify-self: start;
+      text-align: left;
+
+      @media (width &lt; 800px) {
+        align-self: end;
+      }
+
+      @media (800px &lt;= width) {
+        justify-self: end;
+        text-align: right;
+      }
+    }
+
+    #jhu-150th-bar #jhu-150th-name .jhu-150th-bar-sep:last-child {
+
+      @media (width &lt; 800px) {
+        order: -1;
+      }
+    }
+
+    #jhu-150th-bar #jhu-150th-logo {
+      aspect-ratio: 144 / 90;
+      grid-area: logo;
+      height: auto;
+      justify-self: center;
+      object-fit: contain;
+      text-align: center;
+      max-height: 100%;
+      max-width: 144px;
+      width: 100%;
+    }
+
+    #jhu-150th-bar #jhu-150th-tagline {
+      color: var(--jhu-150th-bar-secondary);
+      grid-area: tagline;
+      justify-self: start;
+      text-align: left;
+
+      @media (width &lt; 800px) {
+        align-self: start;
+      }
+    }
+   &lt;/style&gt;
+   &lt;p id="jhu-150th-name"&gt;
+    Johns&nbsp;Hopkins&nbsp;University
+    &lt;span class="jhu-150th-bar-sep"&gt;
+    &lt;/span&gt;
+    Est.&nbsp;1876
+    &lt;span class="jhu-150th-bar-sep"&gt;
+    &lt;/span&gt;
+   &lt;/p&gt;
+   &lt;svg id="jhu-150th-logo" viewbox="0 0 144 90" xmlns="http://www.w3.org/2000/svg"&gt;
+    &lt;defs&gt;
+     &lt;style&gt;
+      .cls-1{fill:none;}.cls-2{fill:var(--jhu-150th-bar-color);}.cls-3{fill:var(--jhu-150th-bar-accent);}
+     &lt;/style&gt;
+    &lt;/defs&gt;
+    &lt;path class="cls-2" d="M69.75,68.12c-3.33-.14-5.69-.2-8.4-.2-2.85,0-5.35.07-8.4.2-.42-.2-.56-1.32-.14-1.73l1.32-.21c4.24-.7,4.24-1.39,4.24-8.68v-9.79c0-2.08-.14-2.22-3.47-2.22h-19.86c-3.33,0-3.47.14-3.47,2.22v9.79c0,7.29.34,8.26,4.23,8.68l2.02.21c.41.28.28,1.53-.14,1.73-3.75-.14-6.11-.2-8.82-.2-2.99,0-5.35.13-8.06.2-.42-.2-.55-1.32-.14-1.73l1.18-.21c3.89-.7,4.03-1.39,4.03-8.68v-25c0-6.35-.01-8.02-2.85-8.58-.59-.12-1.19-.11-1.77.02-2.9.64-2.89,2.14-2.89,8.7v25.76c0,5.48-.28,10.27-1.6,13.47-2.3,5.56-7.22,10-13.68,10-.83,0-2.98-.07-2.98-1.46,0-1.18,1.04-3.2,2.5-3.2.83,0,1.67.14,2.57.42.97.28,1.94.49,2.92.49,1.46,0,2.29-.83,2.78-1.81,1.6-3.27,1.8-13.68,1.8-17.43v-26.25c0-7.71-.69-8.54-4.79-8.89l-1.73-.14c-.42-.28-.28-1.53.14-1.74,4.03.14,6.39.21,9.3.21,1.54,0,2.95-.02,4.38-.06.78-.02,1.35-.03,2.16-.07.44.01,1.08,0,1.5.02,1.78.06,3.39.11,5.25.11,2.71,0,5.07-.07,8.05-.21.42.21.56,1.46.14,1.74l-1.32.14c-4.03.42-4.16,1.46-4.16,8.75v7.99c0,2.15.14,2.22,3.47,2.22h19.86c3.33,0,3.47-.07,3.47-2.22v-7.99c0-7.29-.14-8.33-4.24-8.75l-1.32-.14c-.42-.28-.28-1.53.14-1.74,3.19.14,5.56.21,8.4.21s5.07-.07,8.2-.21c.42.21.55,1.46.14,1.74l-1.46.14c-4.03.42-4.17,1.46-4.17,8.75v25c0,7.29.14,8.2,4.17,8.68l1.67.21c.42.28.28,1.53-.14,1.73h0Z"&gt;
+    &lt;/path&gt;
+    &lt;path class="cls-3" d="M126.76,26.84c6.87,0,11.55,6.45,11.55,15.07s-4.69,14.9-11.55,14.9-11.55-6.45-11.55-14.9,4.69-15.07,11.55-15.07M126.76,22.99c-10.05,0-17.16,7.87-17.16,18.92s7.95,18.75,17.16,18.75c10.05,0,17.16-7.87,17.16-18.75s-7.12-18.92-17.16-18.92"&gt;
+    &lt;/path&gt;
+    &lt;path class="cls-3" d="M81.05,53.13c0,4.28-.09,5.14-3.6,5.57l-1.46.17c-.43.34-.43,1.54.09,1.8,2.4-.09,5.14-.17,7.54-.17,2.65,0,5.31.09,7.88.17.51-.26.51-1.46.09-1.8l-1.46-.17c-3.51-.43-3.6-1.28-3.6-5.57v-19.61c0-2.05,0-4.45.17-6.25,0-.34-.34-.43-.6-.43-2.31.86-5.74,2.23-10.45,3-.43.34-.43,1.28.09,1.63l2.65.26c2.48.26,2.65,1.71,2.65,4.88v16.53h0Z"&gt;
+    &lt;/path&gt;
+    &lt;path class="cls-3" d="M109.02,55.87c0-6.76-3.94-11.64-9.51-15.5-1.11-.77-2.65-1.8-4.02-2.74-2.4-1.63-2.83-2.57-2.4-4.11.43-1.37.86-2.05,3.34-2.4l10.88-1.54c2.74-.43,4.28-3.6,4.88-5.48.09-.51-.17-1.03-.94-1.11-.94.6-1.54.86-4.71,1.28l-5.99.86c-2.74.43-4.45.68-5.57,1.03-1.11.34-2.65,2.91-3.77,5.57-1.11,2.57-1.88,5.39-1.88,6.85,0,3,3.08,4.71,6.77,7.36,3.68,2.65,6.94,6.51,6.94,11.9,0,9.42-8.91,15.76-13.62,17.21-.68.6-.34,1.97.69,2.4,6.25-1.88,18.92-9.76,18.92-21.58"&gt;
+    &lt;/path&gt;
+    &lt;rect class="cls-1" height="90" width="144"&gt;
+    &lt;/rect&gt;
+   &lt;/svg&gt;
+   &lt;p id="jhu-150th-tagline"&gt;
+    &lt;span class="jhu-150th-bar-sep"&gt;
+    &lt;/span&gt;
+    America’s&nbsp;First&nbsp;Research&nbsp;University
+   &lt;/p&gt;
+  &lt;/a&gt;
+  &lt;!-- END COPY HERE --&gt;
+  &lt;div class="jhu-top-nav main-nav nav section" role="navigation"&gt;
+   &lt;div class="shadow-container"&gt;
+    &lt;div class="center force"&gt;
+     &lt;ul class="tier-1 force"&gt;
+      &lt;li aria-hidden="true" class="hamburger-menu"&gt;
+       &lt;a class="openMenu" href="#footer-nav" role="button" title="Menu"&gt;
+        &lt;i aria-hidden="true" class="fa fa-bars"&gt;
+        &lt;/i&gt;
+        &lt;span class="text"&gt;
+         Menu
+        &lt;/span&gt;
+       &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li aria-haspopup="true" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-has-children menu-item-10368 active-section" id="menu-item-10368"&gt;
+       &lt;a href="https://hub.jhu.edu/"&gt;
+        Hub
+       &lt;/a&gt;
+       &lt;button class="toggle-section" tabindex="-1"&gt;
+        &lt;i aria-hidden="true" class="fa fa-plus-square-o"&gt;
+        &lt;/i&gt;
+        &lt;span class="visuallyhidden"&gt;
+         Open Hub
+        &lt;/span&gt;
+       &lt;/button&gt;
+       &lt;ul class="sub-menu tier-2 force"&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10369" id="menu-item-10369"&gt;
+         &lt;a href="https://hub.jhu.edu/about/"&gt;
+          About the Hub
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10370" id="menu-item-10370"&gt;
+         &lt;a href="https://hub.jhu.edu/announcements/"&gt;
+          Announcements
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10371" id="menu-item-10371"&gt;
+         &lt;a href="https://hub.jhu.edu/media/"&gt;
+          For Media
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-16882" id="menu-item-16882"&gt;
+         &lt;a href="https://hub.jhu.edu/experts/"&gt;
+          Faculty Experts Guide
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10372" id="menu-item-10372"&gt;
+         &lt;a href="http://eepurl.com/pa10H"&gt;
+          Subscribe to the newsletter
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-custom_header menu-item-object-custom_header menu-item-10402" id="menu-item-10402"&gt;
+         &lt;h6&gt;
+          &lt;span&gt;
+           Explore by Topic
+          &lt;/span&gt;
+         &lt;/h6&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-6762" id="menu-item-6762"&gt;
+         &lt;a href="https://hub.jhu.edu/arts-culture/"&gt;
+          Arts+Culture
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-6763" id="menu-item-6763"&gt;
+         &lt;a href="https://hub.jhu.edu/athletics/"&gt;
+          Athletics
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-6764" id="menu-item-6764"&gt;
+         &lt;a href="https://hub.jhu.edu/health/"&gt;
+          Health
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-6765" id="menu-item-6765"&gt;
+         &lt;a href="https://hub.jhu.edu/politics-society/"&gt;
+          Politics+Society
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-6766" id="menu-item-6766"&gt;
+         &lt;a href="https://hub.jhu.edu/science-technology/"&gt;
+          Science+Technology
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-6767" id="menu-item-6767"&gt;
+         &lt;a href="https://hub.jhu.edu/student-life/"&gt;
+          Student Life
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-6768" id="menu-item-6768"&gt;
+         &lt;a href="https://hub.jhu.edu/university-news/"&gt;
+          University News
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-6769" id="menu-item-6769"&gt;
+         &lt;a href="https://hub.jhu.edu/voices-opinion/"&gt;
+          Voices+Opinion
+         &lt;/a&gt;
+        &lt;/li&gt;
+       &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-6761" id="menu-item-6761"&gt;
+       &lt;a href="https://hub.jhu.edu/events/"&gt;
+        Events
+       &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li aria-haspopup="true" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-10373" id="menu-item-10373"&gt;
+       &lt;a href="https://hub.jhu.edu/at-work/"&gt;
+        At Work
+       &lt;/a&gt;
+       &lt;button class="toggle-section" tabindex="-1"&gt;
+        &lt;i aria-hidden="true" class="fa fa-plus-square-o"&gt;
+        &lt;/i&gt;
+        &lt;span class="visuallyhidden"&gt;
+         Open At Work
+        &lt;/span&gt;
+       &lt;/button&gt;
+       &lt;ul class="sub-menu tier-2 force"&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10375" id="menu-item-10375"&gt;
+         &lt;a href="https://hub.jhu.edu/at-work/about/"&gt;
+          About Hub at Work
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10377" id="menu-item-10377"&gt;
+         &lt;a href="https://hub.jhu.edu/gazette/archive/"&gt;
+          Gazette Archive
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-custom_header menu-item-object-custom_header menu-item-10400" id="menu-item-10400"&gt;
+         &lt;h6&gt;
+          &lt;span&gt;
+           Explore by Topic
+          &lt;/span&gt;
+         &lt;/h6&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10378" id="menu-item-10378"&gt;
+         &lt;a href="https://hub.jhu.edu/at-work/news-info/"&gt;
+          News+Info
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10379" id="menu-item-10379"&gt;
+         &lt;a href="https://hub.jhu.edu/at-work/benefits-perks/"&gt;
+          Benefits+Perks
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10380" id="menu-item-10380"&gt;
+         &lt;a href="https://hub.jhu.edu/at-work/health-well-being/"&gt;
+          Health+Well-Being
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10381" id="menu-item-10381"&gt;
+         &lt;a href="https://hub.jhu.edu/at-work/tools-tech/"&gt;
+          Tools+Tech
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10382" id="menu-item-10382"&gt;
+         &lt;a href="https://hub.jhu.edu/at-work/happenings/"&gt;
+          Happenings
+         &lt;/a&gt;
+        &lt;/li&gt;
+       &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li aria-haspopup="true" class="menu-item menu-item-type-post_type menu-item-object-page menu-item-has-children menu-item-10374" id="menu-item-10374"&gt;
+       &lt;a href="https://hub.jhu.edu/magazine/"&gt;
+        Johns Hopkins Magazine
+       &lt;/a&gt;
+       &lt;button class="toggle-section" tabindex="-1"&gt;
+        &lt;i aria-hidden="true" class="fa fa-plus-square-o"&gt;
+        &lt;/i&gt;
+        &lt;span class="visuallyhidden"&gt;
+         Open Johns Hopkins Magazine
+        &lt;/span&gt;
+       &lt;/button&gt;
+       &lt;ul class="sub-menu tier-2 force"&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-issue menu-item-25788" id="menu-item-25788"&gt;
+         &lt;a href="https://hub.jhu.edu/magazine/2025/fall/"&gt;
+          Current Issue
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10383" id="menu-item-10383"&gt;
+         &lt;a href="https://hub.jhu.edu/magazine/about/"&gt;
+          About the Magazine
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10384" id="menu-item-10384"&gt;
+         &lt;a href="https://hub.jhu.edu/magazine/past-issues/"&gt;
+          Past Issues
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10385" id="menu-item-10385"&gt;
+         &lt;a href="https://hub.jhu.edu/magazine/contact/"&gt;
+          Contact
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10386" id="menu-item-10386"&gt;
+         &lt;a href="https://hub.jhu.edu/magazine/giving/"&gt;
+          Support Johns Hopkins Magazine
+         &lt;/a&gt;
+        &lt;/li&gt;
+        &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10387" id="menu-item-10387"&gt;
+         &lt;a href="https://hub.jhu.edu/magazine/subscribe/"&gt;
+          Subscribe to the Magazine
+         &lt;/a&gt;
+        &lt;/li&gt;
+       &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10397" id="menu-item-10397"&gt;
+       &lt;a href="https://www.jhu.edu"&gt;
+        jhu.edu
+       &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class="search-menu"&gt;
+       &lt;a aria-label="Press button to enter keywords" class="openSearch" href="/search/" role="button"&gt;
+        &lt;i aria-hidden="true" class="fa fa-fw fa-search"&gt;
+        &lt;/i&gt;
+        &lt;span class="text"&gt;
+         Search
+        &lt;/span&gt;
+       &lt;/a&gt;
+      &lt;/li&gt;
+     &lt;/ul&gt;
+    &lt;/div&gt;
+   &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="main-content-container"&gt;
+   &lt;div class="header row" role="banner"&gt;
+    &lt;div class="center force"&gt;
+     &lt;div class="masthead column force"&gt;
+      &lt;a class="hubmark column" href="/"&gt;
+       &lt;img alt="Hub" class="svg" src="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/hubmark-full.svg"/&gt;
+       &lt;img alt="Hub" class="svg-fallback" src="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/hubmark-full-on-bg-gray.gif"/&gt;
+      &lt;/a&gt;
+      &lt;a class="header-logo column" href="https://www.jhu.edu" title="Johns Hopkins University"&gt;
+       &lt;img alt="Johns Hopkins University" class="svg" src="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/logos/university-logo-small-horizontal-black-no-clear-space.svg"/&gt;
+       &lt;img alt="Johns Hopkins University" class="svg-fallback" src="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/logos/university-logo-small-horizontal-black-no-clear-space-on-bg-gray.gif"/&gt;
+      &lt;/a&gt;
+     &lt;/div&gt;
+    &lt;/div&gt;
+   &lt;/div&gt;
+   &lt;div id="main" role="main"&gt;
+    &lt;div class="article impact-image impact-orientation-landscape has-sidebar has-social main-content" data-convert="0" data-id="10488" data-type="article" data-url="https://hub.jhu.edu/2015/10/13/johns-hopkins-on-film/" itemscope="" itemtype="https://schema.org/NewsArticle" role="article"&gt;
+     &lt;span itemprop="publisher copyrightHolder" itemscope="" itemtype="https://schema.org/EducationalOrganization"&gt;
+      &lt;span itemprop="logo" itemscope="" itemtype="https://schema.org/ImageObject"&gt;
+       &lt;meta content="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/logos/university-logo-small-horizontal-blue-no-clear-space.png" itemprop="url"&gt;
+       &lt;/meta&gt;
+      &lt;/span&gt;
+      &lt;meta content="Johns Hopkins University" itemprop="name"&gt;
+      &lt;/meta&gt;
+     &lt;/span&gt;
+     &lt;span itemprop="image" itemscope="" itemtype="https://schema.org/ImageObject"&gt;
+      &lt;meta content="https://api.hub.jhu.edu/factory/sites/default/files/styles/hub_thumbnail/public/social_network.jpg" itemprop="url"&gt;
+       &lt;meta content="Filming of 'The Social Network' at JHU's Homewood campus" itemprop="about"&gt;
+       &lt;/meta&gt;
+      &lt;/meta&gt;
+     &lt;/span&gt;
+     &lt;meta content="Homewood campus, Peabody Conservatory, East Baltimore campus have made cameos big and small over the years" itemprop="abstract"/&gt;
+     &lt;div class="page-title-container row"&gt;
+      &lt;div class="center force"&gt;
+       &lt;h1 class="headline"&gt;
+        &lt;span itemprop="headline"&gt;
+         Johns Hopkins on film: A guide to university cameos big and small
+        &lt;/span&gt;
+       &lt;/h1&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+     &lt;div class="hero-container row"&gt;
+      &lt;div class="center force"&gt;
+       &lt;div class="hero column force"&gt;
+        &lt;div class="image column force image-landscape"&gt;
+         &lt;div class="image-container"&gt;
+          &lt;img alt="Filming of 'The Social Network' at JHU's Homewood campus" class="column" sizes="(min-width: 1680px) 948px, (min-width: 1280px) 825px, (min-width: 1024px) 734px, (min-width: 863px) 587px, (min-width: 768px) 642px, (min-width: 640px) 572px, (min-width: 412px) 476px, (min-width: 375px) 377px, 343px" src="https://api.hub.jhu.edu/factory/sites/default/files/styles/landscape/public/social_network.jpg" srcset="https://api.hub.jhu.edu/factory/sites/default/files/styles/hub_medium/public/social_network.jpg 420w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_630/public/social_network.jpg 630w, https://api.hub.jhu.edu/factory/sites/default/files/styles/full_width/public/social_network.jpg 825w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_1030/public/social_network.jpg 1030w, https://api.hub.jhu.edu/factory/sites/default/files/styles/hub_large/public/social_network.jpg 1194w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_1300/public/social_network.jpg 1300w, https://api.hub.jhu.edu/factory/sites/default/files/styles/hub_xlarge/public/social_network.jpg 1440w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_1600/public/social_network.jpg 1600w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_1800/public/social_network.jpg 1800w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_2000/public/social_network.jpg 2000w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_2400/public/social_network.jpg 2400w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_2880/public/social_network.jpg 2880w"/&gt;
+         &lt;/div&gt;
+         &lt;div class="caption column has-caption has-credit"&gt;
+          &lt;p&gt;
+           &lt;span class="visuallyhidden"&gt;
+            Image caption:
+           &lt;/span&gt;
+           Jesse Eisenberg stars as Facebook founder Mark Zuckerberg in 'The Social Network' (2010), which was filmed in part at Johns Hopkins University in 2009, with Homewood campus locations standing in for Harvard.
+          &lt;/p&gt;
+          &lt;p class="credit"&gt;
+           &lt;span class="visuallyhidden"&gt;
+            Credit:
+           &lt;/span&gt;
+           Will Kirk / Johns Hopkins University
+          &lt;/p&gt;
+         &lt;/div&gt;
+        &lt;/div&gt;
+       &lt;/div&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+     &lt;div class="body-container row"&gt;
+      &lt;div class="center force"&gt;
+       &lt;div class="body-copy column force" itemprop="articleBody"&gt;
+        &lt;div class="byline"&gt;
+         &lt;p&gt;
+          &lt;span class="visuallyhidden"&gt;
+           By
+          &lt;/span&gt;
+          &lt;span class="author" itemprop="author"&gt;
+           Jenny Kinniff
+          &lt;/span&gt;
+         &lt;/p&gt;
+         &lt;span aria-hidden="true" class="sep"&gt;
+          /
+         &lt;/span&gt;
+         &lt;span class="visuallyhidden"&gt;
+          Published
+         &lt;/span&gt;
+         &lt;meta content="2015-10-13" itemprop="datePublished dateCreated"/&gt;
+         &lt;span class="publish-date convert-pubdate" data-timestamp="1444744800"&gt;
+          Oct 13, 2015
+         &lt;/span&gt;
+        &lt;/div&gt;
+        &lt;p&gt;
+         Have you ever had the experience of watching a movie or television show and suddenly realizing that the stately brick building in the background is part of Johns Hopkins?
+        &lt;/p&gt;
+        &lt;div class="image inline align-right size-medium image-portrait column has-caption" data-id="9212"&gt;
+         &lt;div class="image-container"&gt;
+          &lt;img alt="" sizes="(min-width: 1680px) 579px, (min-width: 1280px) 456px, (min-width: 1024px) 406px, (min-width: 863px) 325px, (min-width: 768px) 274px, (min-width: 640px) 244px, (min-width: 412px) 203px, (min-width: 375px) 307px, 279px" src="https://api.hub.jhu.edu/factory/sites/default/files/styles/hub_medium/public/susie_slagles.jpg" srcset="https://api.hub.jhu.edu/factory/sites/default/files/styles/hub_medium/public/susie_slagles.jpg 420w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_630/public/susie_slagles.jpg 630w, https://api.hub.jhu.edu/factory/sites/default/files/styles/full_width/public/susie_slagles.jpg 825w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_1030/public/susie_slagles.jpg 1030w, https://api.hub.jhu.edu/factory/sites/default/files/styles/hub_large/public/susie_slagles.jpg 1194w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_1300/public/susie_slagles.jpg 1300w, https://api.hub.jhu.edu/factory/sites/default/files/styles/hub_xlarge/public/susie_slagles.jpg 1440w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_1600/public/susie_slagles.jpg 1600w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_1800/public/susie_slagles.jpg 1800w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_2000/public/susie_slagles.jpg 2000w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_2400/public/susie_slagles.jpg 2400w, https://api.hub.jhu.edu/factory/sites/default/files/styles/soft_crop_2880/public/susie_slagles.jpg 2880w"/&gt;
+         &lt;/div&gt;
+         &lt;div class="caption"&gt;
+          &lt;p&gt;
+           &lt;span class="visuallyhidden"&gt;
+            Image caption:
+           &lt;/span&gt;
+           'Miss Susie Slagle's' (1946)
+          &lt;/p&gt;
+         &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;p&gt;
+         JHU's Homewood campus, Peabody Conservatory, and East Baltimore campus have popped up on both big and small screens over the years, in everything from cult classics to Oscar-winning films. The folks at
+         &lt;a href="http://retrospective.jhu.edu"&gt;
+          Hopkins Retrospective
+         &lt;/a&gt;
+         did a bit of digging to let you know where you can see Hopkins on film. Perhaps it's time to add a few of these to your Netflix queue?
+        &lt;/p&gt;
+        &lt;h4&gt;
+         Filmed at Hopkins
+        &lt;/h4&gt;
+        &lt;p&gt;
+         &lt;strong&gt;
+          &lt;em&gt;
+           Mondo Trasho
+          &lt;/em&gt;
+          (1969):
+         &lt;/strong&gt;
+         This early John Waters film features a nude hitchhiking scene on the Homewood campus. A campus security guard summoned the police and Waters, who was filming without permission, was arrested—though the scene still made it into the film.
+        &lt;/p&gt;
+        &lt;p&gt;
+         &lt;strong&gt;
+          &lt;em&gt;
+           Sleepless in Seattle
+          &lt;/em&gt;
+          (1993):
+         &lt;/strong&gt;
+         In this romantic comedy that features many Baltimore locations, Meg Ryan visits her brother, a professor, at his office in the George Peabody Library.
+        &lt;/p&gt;
+        &lt;p&gt;
+         &lt;strong&gt;
+          &lt;em&gt;
+           The Curve
+          &lt;/em&gt;
+          (1998):
+         &lt;/strong&gt;
+         It's nowhere near Oscar material, but this campy campus thriller about roommates who go way too far in their quest for a 4.0 was filmed on the Homewood campus and in a Charles Village fraternity house that's now a private residence.
+        &lt;/p&gt;
+        &lt;p&gt;
+         &lt;strong&gt;
+          &lt;em&gt;
+           Hopkins 24/7
+          &lt;/em&gt;
+          (2000):
+         &lt;/strong&gt;
+         A six-part television documentary, produced by ABC, that gave viewers an inside look at life in the Johns Hopkins Hospital.
+        &lt;/p&gt;
+        &lt;p&gt;
+         &lt;strong&gt;
+          &lt;em&gt;
+           Head of State
+          &lt;/em&gt;
+          (2003):
+         &lt;/strong&gt;
+         The unlikely Democratic presidential candidate Mays Gilliam (played by Chris Rock) rallies campus supporters from the steps of Shriver Hall in this comedy that marked Rock's directorial debut and co-starred the late Bernie Mac.
+        &lt;/p&gt;
+        &lt;p&gt;
+         &lt;strong&gt;
+          &lt;em&gt;
+           Something the Lord Made
+          &lt;/em&gt;
+          (2004):
+         &lt;/strong&gt;
+         This HBO film tells the story of Vivien Thomas, the groundbreaking African-American surgical technician who partnered with cardiologists Alfred Blalock and Helen Taussig to develop a surgical solution to "blue baby" syndrome. It was filmed on the East Baltimore and Homewood campuses.
+        &lt;/p&gt;
+        &lt;p&gt;
+         &lt;strong&gt;
+          &lt;em&gt;
+           The Invasion
+          &lt;/em&gt;
+          (2007):
+         &lt;/strong&gt;
+         Nicole Kidman plays a psychiatrist whose son may be the key to stopping an alien lifeform from infecting the entire human population. Key scenes were filmed in Mudd Hall biology laboratories.
+        &lt;/p&gt;
+        &lt;p&gt;
+         &lt;strong&gt;
+          &lt;em&gt;
+           Hopkins
+          &lt;/em&gt;
+          (2008):
+         &lt;/strong&gt;
+         A seven-part documentary series on the Johns Hopkins Hospital, produced by ABC, that shows the real-life dramas taking place there each day for doctors, nurses, residents, and patients.
+        &lt;/p&gt;
+        &lt;p&gt;
+         &lt;strong&gt;
+          &lt;em&gt;
+           The Social Network
+          &lt;/em&gt;
+          (2010):
+         &lt;/strong&gt;
+         Several recognizable Homewood campus locations—the Keyser and Wyman quads, the space behind AMR I, and the walkway between Rogers House and University Baptist Church, to name a few—stand in for Harvard University in David Fincher's drama about undergrad and computer genius Mark Zuckerberg and the early days of Facebook.
+        &lt;/p&gt;
+        &lt;p&gt;
+         &lt;strong&gt;
+          &lt;em&gt;
+           Veep
+          &lt;/em&gt;
+          (2012- ):
+         &lt;/strong&gt;
+         In season one, Selina Meyer visits a frozen yogurt store for a publicity outing. The "DC yogurt store" is actually Dominion Ice Cream, just across Charles Street from the Mattin Center on the Homewood campus. The Charles Commons residence hall can be seen in several shots.
+        &lt;/p&gt;
+        &lt;p&gt;
+         &lt;strong&gt;
+          &lt;em&gt;
+           House of Cards
+          &lt;/em&gt;
+          (2013- ):
+         &lt;/strong&gt;
+         Scenes taking place at the "Hotel Cotesworth" were filmed at the Peabody Conservatory. Scenes taking place at The Sentinel, a prestigious South Carolina military academy and the alma mater of Frank Underwood, actually show a somewhat altered MSE Library and Gilman Hall.
+        &lt;/p&gt;
+        &lt;h4&gt;
+         Films about (but not filmed at) Hopkins
+        &lt;/h4&gt;
+        &lt;p&gt;
+         &lt;strong&gt;
+          &lt;em&gt;
+           Miss Susie Slagle's
+          &lt;/em&gt;
+          (1946):
+         &lt;/strong&gt;
+         Based on a book by Augusta Tucker, this film tells the story of a nursing student (Veronica Lake) who falls in love with a Hopkins medical intern in 1910 Baltimore. The film has never been released on video or DVD, so look for it on your favorite classic movie channel!
+        &lt;/p&gt;
+        &lt;p&gt;
+         &lt;strong&gt;
+          &lt;em&gt;
+           Gifted Hands: The Ben Carson Story
+          &lt;/em&gt;
+          (2009):
+         &lt;/strong&gt;
+         This biopic, starring Cuba Gooding Jr., tells the life story of neurosurgeon Ben Carson from childhood through the late 1980s.
+        &lt;/p&gt;
+        &lt;hr/&gt;
+        &lt;p&gt;
+         Did we forget to include one of your favorite Hopkins portrayals in TV or film? Send us a note a
+         &lt;a href="mailto:hub@jhu.edu"&gt;
+          hub@jhu.edu
+         &lt;/a&gt;
+         .
+        &lt;/p&gt;
+        &lt;p&gt;
+         &lt;em&gt;
+          Hopkins Retrospective is an initiative to expand our understanding of the history of Johns Hopkins and weave that history into the university experience. Visit
+          &lt;a href="http://retrospective.jhu.edu"&gt;
+           http://retrospective.jhu.edu
+          &lt;/a&gt;
+          to learn more.
+         &lt;/em&gt;
+        &lt;/p&gt;
+        &lt;div class="taxonomy"&gt;
+         &lt;p&gt;
+          Posted in
+          &lt;a href="/arts-culture/"&gt;
+           Arts+Culture
+          &lt;/a&gt;
+          ,
+          &lt;a href="/university-news/"&gt;
+           University News
+          &lt;/a&gt;
+         &lt;/p&gt;
+         &lt;p&gt;
+          Tagged
+          &lt;a href="/tags/film/articles/"&gt;
+           film
+          &lt;/a&gt;
+          ,
+          &lt;a href="/tags/movies/articles/"&gt;
+           movies
+          &lt;/a&gt;
+          ,
+          &lt;a href="/tags/university-history/articles/"&gt;
+           university history
+          &lt;/a&gt;
+         &lt;/p&gt;
+        &lt;/div&gt;
+       &lt;/div&gt;
+       &lt;div aria-label="Sidebar" class="minimal sidebar fixable column" role="complementary"&gt;
+        &lt;div class="social section force" data-view="social"&gt;
+         &lt;div class="share-icon twitter"&gt;
+          &lt;a class="gtm-social-share" data-type="Twitter" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fhub.jhu.edu%2F2015%2F10%2F13%2Fjohns-hopkins-on-film%2F&amp;amp;text=Johns%20Hopkins%20on%20film%3A%20A%20guide%20to%20university%20cameos%20big%20and%20small&amp;amp;via=HubJHU&amp;amp;related=JohnsHopkins" target="_blank"&gt;
+           &lt;i class="fa-brands fa-fw fa-x-twitter"&gt;
+           &lt;/i&gt;
+           &lt;span class="visuallyhidden"&gt;
+            Share on X
+           &lt;/span&gt;
+          &lt;/a&gt;
+         &lt;/div&gt;
+         &lt;div class="share-icon facebook"&gt;
+          &lt;a class="force gtm-social-share" data-type="Facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhub.jhu.edu%2F2015%2F10%2F13%2Fjohns-hopkins-on-film%2F&amp;amp;display=page" target="_blank"&gt;
+           &lt;i class="fa fa-fw fa-facebook"&gt;
+           &lt;/i&gt;
+           &lt;span class="visuallyhidden"&gt;
+            Share on Facebook
+           &lt;/span&gt;
+          &lt;/a&gt;
+         &lt;/div&gt;
+         &lt;div class="share-icon pinterest"&gt;
+          &lt;a class="gtm-social-share" data-type="Pinterest" href="https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fhub.jhu.edu%2F2015%2F10%2F13%2Fjohns-hopkins-on-film%2F&amp;amp;description=Homewood%20campus%2C%20Peabody%20Conservatory%2C%20East%20Baltimore%20campus%20have%20made%20cameos%20big%20and%20small%20over%20the%20years&amp;amp;media=https%3A%2F%2Fapi.hub.jhu.edu%2Ffactory%2Fsites%2Fdefault%2Ffiles%2Fstyles%2Fhub_large%2Fpublic%2Fsocial_network.jpg" target="_blank"&gt;
+           &lt;i class="fa fa-fw fa-pinterest-p"&gt;
+           &lt;/i&gt;
+           &lt;span class="visuallyhidden"&gt;
+            Pin it on Pinterest
+           &lt;/span&gt;
+          &lt;/a&gt;
+         &lt;/div&gt;
+         &lt;div class="share-icon email" data-id="10488"&gt;
+          &lt;button&gt;
+           &lt;i class="fa fa-fw fa-envelope"&gt;
+           &lt;/i&gt;
+           &lt;span class="visuallyhidden"&gt;
+            Email
+           &lt;/span&gt;
+          &lt;/button&gt;
+         &lt;/div&gt;
+         &lt;div class="share-icon more"&gt;
+          &lt;button&gt;
+           &lt;i class="fa fa-fw fa-plus"&gt;
+           &lt;/i&gt;
+           &lt;span class="visuallyhidden"&gt;
+            More social media options
+           &lt;/span&gt;
+          &lt;/button&gt;
+          &lt;div class="more-container hidden"&gt;
+           &lt;div class="share-icon linkedin"&gt;
+            &lt;a class="gtm-social-share" data-type="LinkedIn" href="https://www.linkedin.com/shareArticle?url=https%3A%2F%2Fhub.jhu.edu%2F2015%2F10%2F13%2Fjohns-hopkins-on-film%2F&amp;amp;title=Johns%20Hopkins%20on%20film%3A%20A%20guide%20to%20university%20cameos%20big%20and%20small&amp;amp;summary=Homewood%20campus%2C%20Peabody%20Conservatory%2C%20East%20Baltimore%20campus%20have%20made%20cameos%20big%20and%20small%20over%20the%20years&amp;amp;source=The%20Hub&amp;amp;mini=true" target="_blank"&gt;
+             &lt;i class="fa fa-fw fa-linkedin"&gt;
+             &lt;/i&gt;
+             &lt;span class="visuallyhidden"&gt;
+              Share on LinkedIn
+             &lt;/span&gt;
+            &lt;/a&gt;
+           &lt;/div&gt;
+           &lt;div class="share-icon reddit"&gt;
+            &lt;a class="gtm-social-share" data-type="Reddit" href="http://www.reddit.com/submit?url=https%3A%2F%2Fhub.jhu.edu%2F2015%2F10%2F13%2Fjohns-hopkins-on-film%2F&amp;amp;title=Johns%20Hopkins%20on%20film%3A%20A%20guide%20to%20university%20cameos%20big%20and%20small" target="_blank"&gt;
+             &lt;i class="fa fa-fw fa-reddit-alien"&gt;
+             &lt;/i&gt;
+             &lt;span class="visuallyhidden"&gt;
+              Share on Reddit
+             &lt;/span&gt;
+            &lt;/a&gt;
+           &lt;/div&gt;
+           &lt;div class="share-icon tumblr"&gt;
+            &lt;a class="gtm-social-share" data-type="Tumblr" href="https://www.tumblr.com/widgets/share/tool?canonicalUrl=https%3A%2F%2Fhub.jhu.edu%2F2015%2F10%2F13%2Fjohns-hopkins-on-film%2F" target="_blank"&gt;
+             &lt;i class="fa fa-fw fa-tumblr"&gt;
+             &lt;/i&gt;
+             &lt;span class="visuallyhidden"&gt;
+              Share on Tumblr
+             &lt;/span&gt;
+            &lt;/a&gt;
+           &lt;/div&gt;
+          &lt;/div&gt;
+         &lt;/div&gt;
+        &lt;/div&gt;
+       &lt;/div&gt;
+       &lt;div aria-label="Sidebar" class="full sidebar fixable column" role="complementary"&gt;
+        &lt;div class="social section force" data-view="social"&gt;
+         &lt;div class="share-icon twitter"&gt;
+          &lt;a class="gtm-social-share" data-type="Twitter" href="https://twitter.com/intent/tweet?url=https%3A%2F%2Fhub.jhu.edu%2F2015%2F10%2F13%2Fjohns-hopkins-on-film%2F&amp;amp;text=Johns%20Hopkins%20on%20film%3A%20A%20guide%20to%20university%20cameos%20big%20and%20small&amp;amp;via=HubJHU&amp;amp;related=JohnsHopkins" target="_blank"&gt;
+           &lt;i class="fa-brands fa-fw fa-x-twitter"&gt;
+           &lt;/i&gt;
+           &lt;span class="visuallyhidden"&gt;
+            Share on X
+           &lt;/span&gt;
+          &lt;/a&gt;
+         &lt;/div&gt;
+         &lt;div class="share-icon facebook"&gt;
+          &lt;a class="force gtm-social-share" data-type="Facebook" href="https://www.facebook.com/sharer/sharer.php?u=https%3A%2F%2Fhub.jhu.edu%2F2015%2F10%2F13%2Fjohns-hopkins-on-film%2F&amp;amp;display=page" target="_blank"&gt;
+           &lt;i class="fa fa-fw fa-facebook"&gt;
+           &lt;/i&gt;
+           &lt;span class="visuallyhidden"&gt;
+            Share on Facebook
+           &lt;/span&gt;
+          &lt;/a&gt;
+         &lt;/div&gt;
+         &lt;div class="share-icon pinterest"&gt;
+          &lt;a class="gtm-social-share" data-type="Pinterest" href="https://pinterest.com/pin/create/button/?url=https%3A%2F%2Fhub.jhu.edu%2F2015%2F10%2F13%2Fjohns-hopkins-on-film%2F&amp;amp;description=Homewood%20campus%2C%20Peabody%20Conservatory%2C%20East%20Baltimore%20campus%20have%20made%20cameos%20big%20and%20small%20over%20the%20years&amp;amp;media=https%3A%2F%2Fapi.hub.jhu.edu%2Ffactory%2Fsites%2Fdefault%2Ffiles%2Fstyles%2Fhub_large%2Fpublic%2Fsocial_network.jpg" target="_blank"&gt;
+           &lt;i class="fa fa-fw fa-pinterest-p"&gt;
+           &lt;/i&gt;
+           &lt;span class="visuallyhidden"&gt;
+            Pin it on Pinterest
+           &lt;/span&gt;
+          &lt;/a&gt;
+         &lt;/div&gt;
+         &lt;div class="share-icon email" data-id="10488"&gt;
+          &lt;button&gt;
+           &lt;i class="fa fa-fw fa-envelope"&gt;
+           &lt;/i&gt;
+           &lt;span class="visuallyhidden"&gt;
+            Email
+           &lt;/span&gt;
+          &lt;/button&gt;
+         &lt;/div&gt;
+         &lt;div class="share-icon more"&gt;
+          &lt;button&gt;
+           &lt;i class="fa fa-fw fa-plus"&gt;
+           &lt;/i&gt;
+           &lt;span class="visuallyhidden"&gt;
+            More social media options
+           &lt;/span&gt;
+          &lt;/button&gt;
+          &lt;div class="more-container hidden"&gt;
+           &lt;div class="share-icon linkedin"&gt;
+            &lt;a class="gtm-social-share" data-type="LinkedIn" href="https://www.linkedin.com/shareArticle?url=https%3A%2F%2Fhub.jhu.edu%2F2015%2F10%2F13%2Fjohns-hopkins-on-film%2F&amp;amp;title=Johns%20Hopkins%20on%20film%3A%20A%20guide%20to%20university%20cameos%20big%20and%20small&amp;amp;summary=Homewood%20campus%2C%20Peabody%20Conservatory%2C%20East%20Baltimore%20campus%20have%20made%20cameos%20big%20and%20small%20over%20the%20years&amp;amp;source=The%20Hub&amp;amp;mini=true" target="_blank"&gt;
+             &lt;i class="fa fa-fw fa-linkedin"&gt;
+             &lt;/i&gt;
+             &lt;span class="visuallyhidden"&gt;
+              Share on LinkedIn
+             &lt;/span&gt;
+            &lt;/a&gt;
+           &lt;/div&gt;
+           &lt;div class="share-icon reddit"&gt;
+            &lt;a class="gtm-social-share" data-type="Reddit" href="http://www.reddit.com/submit?url=https%3A%2F%2Fhub.jhu.edu%2F2015%2F10%2F13%2Fjohns-hopkins-on-film%2F&amp;amp;title=Johns%20Hopkins%20on%20film%3A%20A%20guide%20to%20university%20cameos%20big%20and%20small" target="_blank"&gt;
+             &lt;i class="fa fa-fw fa-reddit-alien"&gt;
+             &lt;/i&gt;
+             &lt;span class="visuallyhidden"&gt;
+              Share on Reddit
+             &lt;/span&gt;
+            &lt;/a&gt;
+           &lt;/div&gt;
+           &lt;div class="share-icon tumblr"&gt;
+            &lt;a class="gtm-social-share" data-type="Tumblr" href="https://www.tumblr.com/widgets/share/tool?canonicalUrl=https%3A%2F%2Fhub.jhu.edu%2F2015%2F10%2F13%2Fjohns-hopkins-on-film%2F" target="_blank"&gt;
+             &lt;i class="fa fa-fw fa-tumblr"&gt;
+             &lt;/i&gt;
+             &lt;span class="visuallyhidden"&gt;
+              Share on Tumblr
+             &lt;/span&gt;
+            &lt;/a&gt;
+           &lt;/div&gt;
+          &lt;/div&gt;
+         &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="promos section" data-campaigns="4799" data-count="1" data-format="default" data-placement="sidebar" data-post-campaigns="" data-section="hub" data-view="promo"&gt;
+        &lt;/div&gt;
+       &lt;/div&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+     &lt;div aria-label="You might also like..." class="see-more row" role="complementary"&gt;
+      &lt;div class="center force"&gt;
+       &lt;div class="bbload force also-like column force content-collection" data-endpoint="articles" data-excluded_ids="10488" data-per_page="4" data-type="related"&gt;
+        &lt;script type="application/json"&gt;
+         {"imageSizes":[456,333,296,237,347,309,258,342,311],"tags":[{"_links":{"self":{"href":"\/tags\/301"}},"id":301,"name":"film","slug":"film","type":"tag","weight":0,"_embedded":{"image_thumbnail":null},"url":{"articles":"https:\/\/hub.jhu.edu\/tags\/film\/articles\/","events":"https:\/\/hub.jhu.edu\/tags\/film\/events\/"}},{"_links":{"self":{"href":"\/tags\/919"}},"id":919,"name":"movies","slug":"movies","type":"tag","weight":0,"_embedded":{"image_thumbnail":null},"url":{"articles":"https:\/\/hub.jhu.edu\/tags\/movies\/articles\/","events":"https:\/\/hub.jhu.edu\/tags\/movies\/events\/"}},{"_links":{"self":{"href":"\/tags\/1199"}},"id":1199,"name":"university history","slug":"university-history","type":"tag","weight":0,"_embedded":{"image_thumbnail":null},"url":{"articles":"https:\/\/hub.jhu.edu\/tags\/university-history\/articles\/","events":"https:\/\/hub.jhu.edu\/tags\/university-history\/events\/"}}],"topics":[{"_links":{"self":{"href":"\/topics\/32"}},"id":32,"name":"Arts+Culture","slug":"arts-culture","type":"topic","weight":7,"_embedded":{"image_thumbnail":null},"parent":null,"url":{"articles":"https:\/\/hub.jhu.edu\/arts-culture\/"}},{"_links":{"self":{"href":"\/topics\/35"}},"id":35,"name":"University News","slug":"university-news","type":"topic","weight":1,"_embedded":{"image_thumbnail":null},"parent":null,"url":{"articles":"https:\/\/hub.jhu.edu\/university-news\/"}}],"related_content":null}
+        &lt;/script&gt;
+        &lt;h6&gt;
+         You might also like
+        &lt;/h6&gt;
+       &lt;/div&gt;
+       &lt;div class="bbload force trending column force content-collection" data-endpoint="articles" data-excluded_ids="10488" data-order_by="score" data-per_page="8" data-type="default"&gt;
+        &lt;script type="application/json"&gt;
+         {"imageSizes":[106,106,94,75,126,112,94,96,87]}
+        &lt;/script&gt;
+        &lt;h6&gt;
+         Trending
+        &lt;/h6&gt;
+       &lt;/div&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+    &lt;/div&gt;
+   &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div class="global-footer" role="contentinfo"&gt;
+   &lt;div class="center force"&gt;
+    &lt;a id="footer-nav"&gt;
+    &lt;/a&gt;
+    &lt;div aria-label="Footer menu" class="footer-nav nav row" role="region"&gt;
+     &lt;div class="column footer-network"&gt;
+      &lt;h6&gt;
+       News Network
+      &lt;/h6&gt;
+      &lt;ul class="tier-1 force"&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home menu-item-10403" id="menu-item-10403"&gt;
+        &lt;a href="https://hub.jhu.edu/"&gt;
+         The Hub
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10404" id="menu-item-10404"&gt;
+        &lt;a href="https://hub.jhu.edu/at-work/"&gt;
+         At Work
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10405" id="menu-item-10405"&gt;
+        &lt;a href="https://hub.jhu.edu/magazine/"&gt;
+         Johns Hopkins Magazine
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10407" id="menu-item-10407"&gt;
+        &lt;a href="https://hub.jhu.edu/search/"&gt;
+         Search
+        &lt;/a&gt;
+       &lt;/li&gt;
+      &lt;/ul&gt;
+     &lt;/div&gt;
+     &lt;div class="column footer-explore"&gt;
+      &lt;h6&gt;
+       Explore by Topic
+      &lt;/h6&gt;
+      &lt;ul class="tier-1 force"&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10408" id="menu-item-10408"&gt;
+        &lt;a href="https://hub.jhu.edu/health/"&gt;
+         Health
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10409" id="menu-item-10409"&gt;
+        &lt;a href="https://hub.jhu.edu/science-technology/"&gt;
+         Science+Technology
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10410" id="menu-item-10410"&gt;
+        &lt;a href="https://hub.jhu.edu/arts-culture/"&gt;
+         Arts+Culture
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10411" id="menu-item-10411"&gt;
+        &lt;a href="https://hub.jhu.edu/politics-society/"&gt;
+         Politics+Society
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10412" id="menu-item-10412"&gt;
+        &lt;a href="https://hub.jhu.edu/university-news/"&gt;
+         University News
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10413" id="menu-item-10413"&gt;
+        &lt;a href="https://hub.jhu.edu/student-life/"&gt;
+         Student Life
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10414" id="menu-item-10414"&gt;
+        &lt;a href="https://hub.jhu.edu/athletics/"&gt;
+         Athletics
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10415" id="menu-item-10415"&gt;
+        &lt;a href="https://hub.jhu.edu/voices-opinion/"&gt;
+         Voices+Opinion
+        &lt;/a&gt;
+       &lt;/li&gt;
+      &lt;/ul&gt;
+     &lt;/div&gt;
+     &lt;div class="column footer-resources"&gt;
+      &lt;h6&gt;
+       Resources
+      &lt;/h6&gt;
+      &lt;ul class="tier-1 force"&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10416" id="menu-item-10416"&gt;
+        &lt;a href="https://hub.jhu.edu/about/"&gt;
+         About the Hub
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10417" id="menu-item-10417"&gt;
+        &lt;a href="http://eepurl.com/pa10H"&gt;
+         Get Email Updates
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10418" id="menu-item-10418"&gt;
+        &lt;a href="https://hub.jhu.edu/events/"&gt;
+         Events
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10419" id="menu-item-10419"&gt;
+        &lt;a href="https://hub.jhu.edu/vip/submit-announcement/"&gt;
+         Submit an Announcement
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10420" id="menu-item-10420"&gt;
+        &lt;a href="https://hub.jhu.edu/vip/submit-event/"&gt;
+         Submit an Event
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10422" id="menu-item-10422"&gt;
+        &lt;a href="https://hub.jhu.edu/media/"&gt;
+         For Media
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-16883" id="menu-item-16883"&gt;
+        &lt;a href="https://hub.jhu.edu/experts/"&gt;
+         Faculty Experts Guide
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10424" id="menu-item-10424"&gt;
+        &lt;a href="https://www.jhu.edu/privacystatement"&gt;
+         Privacy Statement
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10425" id="menu-item-10425"&gt;
+        &lt;a href="http://accessibility.jhu.edu/"&gt;
+         Accessibility
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-10426" id="menu-item-10426"&gt;
+        &lt;a href="https://hub.jhu.edu/about/"&gt;
+         Contact Us
+        &lt;/a&gt;
+       &lt;/li&gt;
+      &lt;/ul&gt;
+     &lt;/div&gt;
+     &lt;div class="column footer-discover"&gt;
+      &lt;h6&gt;
+       Discover JHU
+      &lt;/h6&gt;
+      &lt;ul class="tier-1 force"&gt;
+       &lt;li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10427" id="menu-item-10427"&gt;
+        &lt;a href="https://www.jhu.edu"&gt;
+         jhu.edu
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10428" id="menu-item-10428"&gt;
+        &lt;a href="https://www.jhu.edu/about/"&gt;
+         About the University
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10429" id="menu-item-10429"&gt;
+        &lt;a href="https://www.jhu.edu/schools/"&gt;
+         Schools &amp;amp; Divisions
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10430" id="menu-item-10430"&gt;
+        &lt;a href="https://www.jhu.edu/academics/"&gt;
+         Academic Programs
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10431" id="menu-item-10431"&gt;
+        &lt;a href="https://www.jhu.edu/admissions/"&gt;
+         Admissions
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10432" id="menu-item-10432"&gt;
+        &lt;a href="https://www.jhu.edu/admissions/visit/"&gt;
+         Plan a Visit
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10433" id="menu-item-10433"&gt;
+        &lt;a href="https://hr.jhu.edu/jobs-jhu/"&gt;
+         Employment
+        &lt;/a&gt;
+       &lt;/li&gt;
+       &lt;li class="menu-item menu-item-type-custom menu-item-object-custom menu-item-10434" id="menu-item-10434"&gt;
+        &lt;a href="https://my.jh.edu/portal/web/jhupub"&gt;
+         my.JohnsHopkins.edu
+        &lt;/a&gt;
+       &lt;/li&gt;
+      &lt;/ul&gt;
+     &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="identification row"&gt;
+     &lt;a class="footer-logo column" href="https://www.jhu.edu"&gt;
+      &lt;img alt="Johns Hopkins University" class="horizontal-logo svg center" src="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/logos/university-logo-small-horizontal-white-no-clear-space.svg"/&gt;
+      &lt;img alt="Johns Hopkins University" class="horizontal-logo svg-fallback center" src="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/logos/university-logo-small-horizontal-white-no-clear-space-on-288-blue.gif"/&gt;
+      &lt;img alt="Johns Hopkins University" class="vertical-logo svg center" src="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/logos/university-logo-small-vertical-white-no-clear-space.svg"/&gt;
+      &lt;img alt="Johns Hopkins University" class="vertical-logo svg-fallback center" src="https://hub.jhu.edu/assets/themes/wphub/src/assets/images/logos/university-logo-small-vertical-white-no-clear-space-on-288-blue.gif"/&gt;
+     &lt;/a&gt;
+     &lt;ul class="contact column"&gt;
+      &lt;li class="university-name"&gt;
+       © 2026
+       &lt;a href="https://www.jhu.edu"&gt;
+        Johns Hopkins University
+       &lt;/a&gt;
+       . All rights reserved.
+      &lt;/li&gt;
+      &lt;li class="office-name"&gt;
+       &lt;a href="http://universitycommunications.jhu.edu/"&gt;
+        University Communications
+       &lt;/a&gt;
+      &lt;/li&gt;
+      &lt;li class="address"&gt;
+       3910 Keswick Rd., Suite N2600, Baltimore, MD
+      &lt;/li&gt;
+      &lt;li&gt;
+       &lt;div class="social-links"&gt;
+        &lt;a class="twitter fa-stack" href="http://www.twitter.com/JohnsHopkins"&gt;
+         &lt;i aria-hidden="true" class="fa-solid fa-stack-1x fa-square"&gt;
+         &lt;/i&gt;
+         &lt;i aria-hidden="true" class="fa-brands fa-stack-1x fa-square-x-twitter"&gt;
+         &lt;/i&gt;
+         &lt;span class="visuallyhidden"&gt;
+          X
+         &lt;/span&gt;
+        &lt;/a&gt;
+        &lt;a class="facebook fa-stack" href="http://www.facebook.com/johnshopkinsuniversity"&gt;
+         &lt;i aria-hidden="true" class="fa-solid fa-stack-1x fa-square"&gt;
+         &lt;/i&gt;
+         &lt;i aria-hidden="true" class="fa-brands fa-stack-1x fa-facebook-square"&gt;
+         &lt;/i&gt;
+         &lt;span class="visuallyhidden"&gt;
+          Facebook
+         &lt;/span&gt;
+        &lt;/a&gt;
+        &lt;a class="linkedin fa-stack" href="https://www.linkedin.com/edu/the-johns-hopkins-university-18560"&gt;
+         &lt;i aria-hidden="true" class="fa-solid fa-stack-1x fa-square"&gt;
+         &lt;/i&gt;
+         &lt;i aria-hidden="true" class="fa-brands fa-stack-1x fa-linkedin-in"&gt;
+         &lt;/i&gt;
+         &lt;span class="visuallyhidden"&gt;
+          LinkedIn
+         &lt;/span&gt;
+        &lt;/a&gt;
+        &lt;a class="youtube fa-stack" href="http://www.youtube.com/johnshopkins"&gt;
+         &lt;i aria-hidden="true" class="fa-solid fa-stack-1x fa-square"&gt;
+         &lt;/i&gt;
+         &lt;i aria-hidden="true" class="fa-brands fa-stack-1x fa-youtube-square"&gt;
+         &lt;/i&gt;
+         &lt;span class="visuallyhidden"&gt;
+          YouTube
+         &lt;/span&gt;
+        &lt;/a&gt;
+        &lt;a class="instagram fa-stack" href="http://instagram.com/johnshopkinsu"&gt;
+         &lt;i aria-hidden="true" class="fa-solid fa-stack-1x fa-square"&gt;
+         &lt;/i&gt;
+         &lt;i aria-hidden="true" class="fa-brands fa-stack-1x fa-instagram-square"&gt;
+         &lt;/i&gt;
+         &lt;span class="visuallyhidden"&gt;
+          Instagram
+         &lt;/span&gt;
+        &lt;/a&gt;
+       &lt;/div&gt;
+      &lt;/li&gt;
+     &lt;/ul&gt;
+    &lt;/div&gt;
+   &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div id="layout-debugger"&gt;
+   &lt;div id="column-master-super-awesome-grid"&gt;
+    &lt;div class="center force"&gt;
+     &lt;!-- &lt;div class="row force"&gt;&lt;div class="column twelve"&gt;twelve&lt;/div&gt;&lt;/div&gt;
+
+      &lt;div class="row force"&gt;&lt;div class="column eleven"&gt;eleven&lt;/div&gt;&lt;/div&gt;
+
+      &lt;div class="row force"&gt;&lt;div class="column ten"&gt;ten&lt;/div&gt;&lt;/div&gt;
+
+      &lt;div class="row force"&gt;&lt;div class="column nine"&gt;nine&lt;/div&gt;&lt;/div&gt;
+
+      &lt;div class="row force"&gt;&lt;div class="column eight"&gt;eight&lt;/div&gt;&lt;/div&gt;
+
+      &lt;div class="row force"&gt;&lt;div class="column seven"&gt;seven&lt;/div&gt;&lt;/div&gt;
+
+      &lt;div class="row force"&gt;
+        &lt;div class="column six"&gt;six&lt;/div&gt;
+        &lt;div class="column six"&gt;six&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class="row force"&gt;&lt;div class="column five"&gt;five&lt;/div&gt;&lt;/div&gt;
+
+      &lt;div class="row force"&gt;
+        &lt;div class="column four"&gt;four&lt;/div&gt;
+        &lt;div class="column four"&gt;four&lt;/div&gt;
+        &lt;div class="column four"&gt;four&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class="row force"&gt;
+        &lt;div class="column three"&gt;three&lt;/div&gt;
+        &lt;div class="column three"&gt;three&lt;/div&gt;
+        &lt;div class="column three"&gt;three&lt;/div&gt;
+        &lt;div class="column three"&gt;three&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class="row force"&gt;
+        &lt;div class="column two"&gt;&lt;/div&gt;
+        &lt;div class="column two"&gt;&lt;/div&gt;
+        &lt;div class="column two"&gt;&lt;/div&gt;
+        &lt;div class="column two"&gt;&lt;/div&gt;
+        &lt;div class="column two"&gt;&lt;/div&gt;
+        &lt;div class="column two"&gt;&lt;/div&gt;
+      &lt;/div&gt;
+
+      &lt;div class="row force"&gt;
+        &lt;div class="column one"&gt;one&lt;/div&gt;
+        &lt;div class="column one"&gt;one&lt;/div&gt;
+        &lt;div class="column one"&gt;one&lt;/div&gt;
+        &lt;div class="column one"&gt;one&lt;/div&gt;
+        &lt;div class="column one"&gt;one&lt;/div&gt;
+        &lt;div class="column one"&gt;one&lt;/div&gt;
+        &lt;div class="column one"&gt;one&lt;/div&gt;
+        &lt;div class="column one"&gt;one&lt;/div&gt;
+        &lt;div class="column one"&gt;one&lt;/div&gt;
+        &lt;div class="column one"&gt;one&lt;/div&gt;
+        &lt;div class="column one"&gt;one&lt;/div&gt;
+        &lt;div class="column one"&gt;one&lt;/div&gt;
+      &lt;/div&gt; --&gt;
+     &lt;!-- &lt;div class="row force"&gt;
+        &lt;div class="column twelve"&gt;&lt;/div&gt;
+      &lt;/div&gt; --&gt;
+     &lt;div class="row force"&gt;
+      &lt;div class="column eleven"&gt;
+      &lt;/div&gt;
+      &lt;div class="column one"&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+     &lt;div class="row force"&gt;
+      &lt;div class="column ten"&gt;
+      &lt;/div&gt;
+      &lt;div class="column two"&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+     &lt;div class="row force"&gt;
+      &lt;div class="column nine"&gt;
+      &lt;/div&gt;
+      &lt;div class="column three"&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+     &lt;div class="row force"&gt;
+      &lt;div class="column eight"&gt;
+      &lt;/div&gt;
+      &lt;div class="column four"&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+     &lt;div class="row force"&gt;
+      &lt;div class="column seven"&gt;
+      &lt;/div&gt;
+      &lt;div class="column five"&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+     &lt;div class="row force"&gt;
+      &lt;div class="column six"&gt;
+      &lt;/div&gt;
+      &lt;div class="column six"&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+     &lt;!-- &lt;div class="row force"&gt;
+        &lt;div class="column five"&gt;&lt;/div&gt;
+        &lt;div class="column seven"&gt;&lt;/div&gt;
+      &lt;/div&gt; --&gt;
+     &lt;div class="row force"&gt;
+      &lt;div class="column four"&gt;
+      &lt;/div&gt;
+      &lt;div class="column four"&gt;
+      &lt;/div&gt;
+      &lt;div class="column four"&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+     &lt;div class="row force"&gt;
+      &lt;div class="column three"&gt;
+      &lt;/div&gt;
+      &lt;div class="column three"&gt;
+      &lt;/div&gt;
+      &lt;div class="column three"&gt;
+      &lt;/div&gt;
+      &lt;div class="column three"&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+     &lt;div class="row force"&gt;
+      &lt;div class="column two"&gt;
+      &lt;/div&gt;
+      &lt;div class="column two"&gt;
+      &lt;/div&gt;
+      &lt;div class="column two"&gt;
+      &lt;/div&gt;
+      &lt;div class="column two"&gt;
+      &lt;/div&gt;
+      &lt;div class="column two"&gt;
+      &lt;/div&gt;
+      &lt;div class="column two"&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+     &lt;div class="row force"&gt;
+      &lt;div class="column one"&gt;
+      &lt;/div&gt;
+      &lt;div class="column one"&gt;
+      &lt;/div&gt;
+      &lt;div class="column one"&gt;
+      &lt;/div&gt;
+      &lt;div class="column one"&gt;
+      &lt;/div&gt;
+      &lt;div class="column one"&gt;
+      &lt;/div&gt;
+      &lt;div class="column one"&gt;
+      &lt;/div&gt;
+      &lt;div class="column one"&gt;
+      &lt;/div&gt;
+      &lt;div class="column one"&gt;
+      &lt;/div&gt;
+      &lt;div class="column one"&gt;
+      &lt;/div&gt;
+      &lt;div class="column one"&gt;
+      &lt;/div&gt;
+      &lt;div class="column one"&gt;
+      &lt;/div&gt;
+      &lt;div class="column one"&gt;
+      &lt;/div&gt;
+     &lt;/div&gt;
+    &lt;/div&gt;
+   &lt;/div&gt;
+   &lt;div id="width-breakpoint-totally-tubular-stripes"&gt;
+    &lt;div class="stripe hand"&gt;
+    &lt;/div&gt;
+    &lt;div class="stripe lap"&gt;
+    &lt;/div&gt;
+    &lt;div class="stripe desk"&gt;
+    &lt;/div&gt;
+    &lt;div class="stripe wall"&gt;
+    &lt;/div&gt;
+    &lt;div class="stripe jumbotron"&gt;
+    &lt;/div&gt;
+   &lt;/div&gt;
+   &lt;div id="height-breakpoint-totally-tubular-stripes"&gt;
+    &lt;div class="stripe hand"&gt;
+    &lt;/div&gt;
+    &lt;div class="stripe lap"&gt;
+    &lt;/div&gt;
+    &lt;div class="stripe desk"&gt;
+    &lt;/div&gt;
+    &lt;div class="stripe wall"&gt;
+    &lt;/div&gt;
+    &lt;div class="stripe jumbotron"&gt;
+    &lt;/div&gt;
+   &lt;/div&gt;
+   &lt;div id="breakpoint-checker"&gt;
+   &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;div id="breakpoint"&gt;
+   &lt;div class="width"&gt;
+    &lt;div class="hand"&gt;
+    &lt;/div&gt;
+    &lt;div class="lap"&gt;
+    &lt;/div&gt;
+    &lt;div class="desk"&gt;
+    &lt;/div&gt;
+    &lt;div class="wall"&gt;
+    &lt;/div&gt;
+    &lt;div class="jumbotron"&gt;
+    &lt;/div&gt;
+   &lt;/div&gt;
+   &lt;div class="height"&gt;
+    &lt;div class="hand"&gt;
+    &lt;/div&gt;
+    &lt;div class="lap"&gt;
+    &lt;/div&gt;
+    &lt;div class="desk"&gt;
+    &lt;/div&gt;
+    &lt;div class="wall"&gt;
+    &lt;/div&gt;
+    &lt;div class="jumbotron"&gt;
+    &lt;/div&gt;
+   &lt;/div&gt;
+  &lt;/div&gt;
+  &lt;script id="underscore-js" src="https://hub.jhu.edu/wp/wp-includes/js/underscore.min.js?ver=1.13.4" type="text/javascript"&gt;
+  &lt;/script&gt;
+  &lt;script id="jquery-core-js" src="https://hub.jhu.edu/wp/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" type="text/javascript"&gt;
+  &lt;/script&gt;
+  &lt;script id="jquery-migrate-js" src="https://hub.jhu.edu/wp/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1" type="text/javascript"&gt;
+  &lt;/script&gt;
+  &lt;script id="backbone-js" src="https://hub.jhu.edu/wp/wp-includes/js/backbone.min.js?ver=1.5.0" type="text/javascript"&gt;
+  &lt;/script&gt;
+  &lt;script id="lodash-js" src="https://hub.jhu.edu/wp/wp-includes/js/dist/vendor/lodash.min.js?ver=4.17.21" type="text/javascript"&gt;
+  &lt;/script&gt;
+  &lt;script id="lodash-js-after" type="text/javascript"&gt;
+   /* &lt;![CDATA[ */
+window.lodash = _.noConflict();
+/* ]]&gt; */
+  &lt;/script&gt;
+  &lt;script id="jhu-vent-js" src="https://hub.jhu.edu/assets/themes/wphub/assets/js/vent.js?ver=a41c71dee6c1cbfb8e8f" type="text/javascript"&gt;
+  &lt;/script&gt;
+  &lt;script id="moment-js" src="https://hub.jhu.edu/wp/wp-includes/js/dist/vendor/moment.min.js?ver=2.29.4" type="text/javascript"&gt;
+  &lt;/script&gt;
+  &lt;script id="moment-js-after" type="text/javascript"&gt;
+   /* &lt;![CDATA[ */
+moment.updateLocale( 'en_US', {"months":["January","February","March","April","May","June","July","August","September","October","November","December"],"monthsShort":["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],"weekdays":["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],"weekdaysShort":["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],"week":{"dow":1},"longDateFormat":{"LT":"g:i a","LTS":null,"L":null,"LL":"F j, Y","LLL":"F j, Y g:i a","LLLL":null}} );
+/* ]]&gt; */
+  &lt;/script&gt;
+  &lt;script id="jhu-global-js" src="https://hub.jhu.edu/assets/themes/wphub/assets/js/global.js?ver=00925531fc239631ea36" type="text/javascript"&gt;
+  &lt;/script&gt;
+  &lt;script id="gforms_recaptcha_recaptcha-js-extra" type="text/javascript"&gt;
+   /* &lt;![CDATA[ */
+var gforms_recaptcha_recaptcha_strings = {"site_key":"6LclNtkZAAAAANENXb4rH5E6uT1RlbUCAFvjxJYj","ajaxurl":"https:\/\/hub.jhu.edu\/wp-admin\/admin-ajax.php","nonce":"221e1c7283"};
+/* ]]&gt; */
+  &lt;/script&gt;
+  &lt;script id="gforms_recaptcha_recaptcha-js" src="https://www.google.com/recaptcha/api.js?render=6LclNtkZAAAAANENXb4rH5E6uT1RlbUCAFvjxJYj&amp;amp;ver=1.2.2" type="text/javascript"&gt;
+  &lt;/script&gt;
+  &lt;script id="gforms_recaptcha_recaptcha-js-after" type="text/javascript"&gt;
+   /* &lt;![CDATA[ */
+(function($){grecaptcha.ready(function(){$('.grecaptcha-badge').css('visibility','hidden');});})(jQuery);
+/* ]]&gt; */
+  &lt;/script&gt;
+  &lt;script id="jhu-page-js" src="https://hub.jhu.edu/assets/themes/wphub/assets/js/page.js?ver=d281b0fb89d35ec9aebd" type="text/javascript"&gt;
+  &lt;/script&gt;
+  &lt;script id="jhu-article-js" src="https://hub.jhu.edu/assets/themes/wphub/assets/js/article.js?ver=4fb5f2a2f4bbbfb8cb19" type="text/javascript"&gt;
+  &lt;/script&gt;
+  &lt;script type="text/javascript"&gt;
+   /*&lt;![CDATA[*/
+(function() {
+var sz = document.createElement('script'); sz.type = 'text/javascript'; sz.async = true;
+sz.src = '//siteimproveanalytics.com/js/siteanalyze_6185845.js';
+var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(sz, s);
+})();
+/*]]&gt;*/
+  &lt;/script&gt;
+ &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+</div>
+</div>
+<div id="b892b920" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>titles_raw <span class="op">=</span> soup.find_all(<span class="st">'strong'</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>titles_cleaned <span class="op">=</span> []</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> title <span class="kw">in</span> titles_raw:</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    title_name_element <span class="op">=</span> title.find(<span class="st">'em'</span>)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    title_name <span class="op">=</span> title_name_element.getText(strip<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    title_name_element.extract()</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    title_year_raw <span class="op">=</span> title.get_text(strip<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    title_year <span class="op">=</span> re.search(<span class="vs">r'</span><span class="kw">(</span><span class="fu">?&lt;</span><span class="vs">=</span><span class="ch">\(</span><span class="kw">)(</span><span class="dv">\d</span><span class="op">*</span><span class="kw">)</span><span class="vs">'</span>, title_year_raw).group(<span class="dv">0</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    titles_cleaned.append({<span class="st">'Title'</span>: title_name, <span class="st">'Year'</span>: title_year})</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>titles_data <span class="op">=</span> pd.DataFrame(titles_cleaned) </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>titles_data.to_csv(<span class="st">'data/cleaned/jhu-titles.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>The resulting <code>jhu-titles.csv</code> can be shared with learners, and the code to scrape the information can be shared post-session for those that are interested.</p>
+</section>
+<section id="retrieving-the-imdb-titles-that-correspond-to-the-titles-listed-in-jhu-titles.csv" class="level2">
+<h2 class="anchored" data-anchor-id="retrieving-the-imdb-titles-that-correspond-to-the-titles-listed-in-jhu-titles.csv">Retrieving the IMDB titles that correspond to the titles listed in <code>jhu-titles.csv</code></h2>
+<p>This is more challenging than you might expect – there are a number of duplicate titles for some of the JHU titles, so we need to do a little data cleaning, as well as some manual data exploration.</p>
+<p>The IMDB tabular data is large, so I use <code>duckdb</code> here to allow me to treat them as a SQL database.</p>
+<div id="8d84d277" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>con <span class="op">=</span> duckdb.<span class="ex">connect</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Query matching titles</p>
+<div id="04835453" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Query for rows in IMDB title basics where the corresponding </span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># title and year are present for the titles scraped from the JHU site</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>titles <span class="op">=</span> con.execute(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT *</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM read_csv_auto(</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="st">    "./data/title.basics.tsv", </span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="st">    header=True,</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="st">    nullstr="</span><span class="ch">\\</span><span class="st">N") as tb</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="st">    JOIN titles_data as td ON tb.originalTitle = td.Title</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE tb.startYear = td.Year</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>).fetchdf()</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>titles.to_csv(<span class="st">'data/cleaned/imdb-title-matches.csv'</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="selecting-matching-titles" class="level2">
+<h2 class="anchored" data-anchor-id="selecting-matching-titles">Selecting matching titles</h2>
+<p>Multiple joins with CTE’s</p>
+<div id="86499649" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Query for rows in IMDB title basics where the corresponding</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># title and year are present for the titles scraped from the JHU site</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> con.execute(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">"""</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="st">    WITH tb AS(</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT *</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM read_csv_auto(</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="st">        "./data/title.basics.tsv", </span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="st">        header=True,</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="st">        nullstr="</span><span class="ch">\\</span><span class="st">N"</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="st">    ) as titles_basics</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="st">    JOIN titles_data </span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="st">    ON titles_basics.originalTitle = titles_data.Title</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="st">    WHERE titles_basics.startYear = titles_data.Year),</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="st">    tr AS(</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="st">        SELECT </span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="st">        tb.*,</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="st">        tr.averageRating,</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="st">        tr.numVotes </span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM tb</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="st">    JOIN read_csv_auto(</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a><span class="st">        "./data/title.ratings.tsv",</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a><span class="st">        header=True,</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="st">        nullstr="</span><span class="ch">\\</span><span class="st">N"</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="st">    ) as tr</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="st">    ON tb.tconst = tr.tconst</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="st">    )</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT *</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM tr</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="st">    """</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>).fetchdf()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Data cleaning - find unique title and category</p>
+<div id="793c66de" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'startYear'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'startYear'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'%Y'</span>, errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df[<span class="st">'endYear'</span>] <span class="op">=</span> pd.to_datetime(df[<span class="st">'endYear'</span>], <span class="bu">format</span><span class="op">=</span><span class="st">'%Y'</span>, errors<span class="op">=</span><span class="st">'coerce'</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Locate first year of title, for all title and title type combinations</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>df.loc[df.groupby([<span class="st">'titleType'</span>, <span class="st">'primaryTitle'</span>]).startYear.idxmin().dropna()]</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#Questions:</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#- For TV shows, do we return an average rating across all seasons/episodes?</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#Get rotten tomato ratings:</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>rt_scores <span class="op">=</span> pd.read_csv(<span class="st">'./data/movie_info.csv'</span>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>title_rt_scores <span class="op">=</span> rt_scores[rt_scores[<span class="st">'title'</span>].isin(titles)]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Questions/Comments</p>
+<ul>
+<li>Many titles missing in Rotten Tomatoes scores.</li>
+<li>How do we disambiguate House of Cards show from 1968 movie.</li>
+</ul>
+<p>Scrape rotten tomatoes for individual titles:</p>
+<div id="a32b0542" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(<span class="st">'https://www.rottentomatoes.com/tv/house-of-cards'</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(response.content, <span class="st">'html.parser'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="05a8046d" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>critics_score <span class="op">=</span> soup.find(<span class="st">"rt-text"</span>, attrs<span class="op">=</span>{<span class="st">"slot"</span>: <span class="st">"criticsScore"</span>, <span class="st">"role"</span>:<span class="st">"button"</span>}).get_text(strip<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>audience_score <span class="op">=</span> soup.find(<span class="st">"rt-text"</span>, attrs<span class="op">=</span>{<span class="st">"slot"</span>: <span class="st">"audienceScore"</span>, <span class="st">"role"</span>:<span class="st">"button"</span>}).get_text(strip<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Breadcrumbs: - Turn scraper into function. - Add TV or Movie to titles, as Rotten Tomatos URLs are either m or tv depending, i.e.&nbsp;https://www.rottentomatoes.com/tv/house_of_cards</p>
+<div id="446583c4" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>medium <span class="op">=</span> [<span class="st">'m'</span>, <span class="st">'m'</span>, <span class="st">'tv'</span>, <span class="st">'m'</span>, <span class="st">'m'</span>, <span class="st">'m'</span>, <span class="st">'m'</span>, <span class="st">'tv'</span>, <span class="st">'m'</span>, <span class="st">'tv'</span>, <span class="st">'tv'</span>, <span class="st">'m'</span>, <span class="st">'m'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="cecc6801" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Call function</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> url_constructor(title, medium):</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    rt_title <span class="op">=</span> re.sub(<span class="vs">r"</span><span class="pp">[^a-z0-9_]</span><span class="vs">"</span>, <span class="st">""</span>, title.lower().replace(<span class="st">" "</span>, <span class="st">"_"</span>))</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="ss">f'https://www.rottentomatoes.com/</span><span class="sc">{</span>medium<span class="sc">}</span><span class="ss">/</span><span class="sc">{</span>rt_title<span class="sc">}</span><span class="ss">'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="7b283b53" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>rt_urls <span class="op">=</span> []</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> title, med <span class="kw">in</span> <span class="bu">zip</span>(titles, medium):</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> url_constructor(title, med)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    rt_urls.append(url) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="f7534573" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_rt_ratings(url):</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>: </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> requests.get(url)</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>        response.raise_for_status()</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>        soup <span class="op">=</span> BeautifulSoup(response.content, <span class="st">'html.parser'</span>)</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>        critics_score <span class="op">=</span> soup.find(<span class="st">"rt-text"</span>, attrs<span class="op">=</span>{<span class="st">"slot"</span>: <span class="st">"criticsScore"</span>, <span class="st">"role"</span>:<span class="st">"button"</span>}).get_text(strip<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>        audience_score <span class="op">=</span> soup.find(<span class="st">"rt-text"</span>, attrs<span class="op">=</span>{<span class="st">"slot"</span>: <span class="st">"audienceScore"</span>, <span class="st">"role"</span>:<span class="st">"button"</span>}).get_text(strip<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {<span class="st">'critics'</span>: critics_score,<span class="st">'audience'</span>: audience_score}</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> requests.exceptions.HTTPError <span class="im">as</span> err:</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {<span class="st">'critics'</span>: <span class="va">None</span>,<span class="st">'audience'</span>: <span class="va">None</span>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div id="d64f6fd5" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>audience_scores <span class="op">=</span> []</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>critics_scores <span class="op">=</span> []</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> url <span class="kw">in</span> rt_urls:</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    scores <span class="op">=</span> get_rt_ratings(url)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    audience_scores.append(scores.get(<span class="st">'audience'</span>))</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    critics_scores.append(scores.get(<span class="st">'critics'</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>Construct dataframe of media and ratings</p>
+<div id="6c75632b" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> {<span class="st">"media"</span>: titles,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="st">"audience_score"</span>: audience_scores, </span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="st">"critics_scores"</span>: critics_scores}</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
