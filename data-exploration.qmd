@@ -11,6 +11,7 @@ import requests
 from bs4 import BeautifulSoup
 import duckdb
 import re
+from itables import show
 ```
 
 Scrape page for details
@@ -20,11 +21,10 @@ response = requests.get('https://hub.jhu.edu/2015/10/13/johns-hopkins-on-film/')
 soup = BeautifulSoup(response.content, 'html.parser')
 ```
 
-
 ```{python}
+#| eval: false
 print(soup.prettify())
 ```
-
 
 ```{python}
 titles_raw = soup.find_all('strong')
@@ -37,28 +37,57 @@ for title in titles_raw:
     title_year = re.search(r'(?<=\()(\d*)', title_year_raw).group(0)
     titles_cleaned.append({'Title': title_name, 'Year': title_year})
 titles_data = pd.DataFrame(titles_cleaned) 
-titles_data.to_csv('data/cleaned/jhu-titles.csv', index=False)
+show(
+    titles_data,
+    scrollX=True,
+    pageLength=13
+)
 ```
 
-The resulting `jhu-titles.csv` can be shared with learners, and the code to scrape the information can be shared post-session for those that are interested.
+::: aside
+Here I generate a cleaned version of the JHU titles listed on JHU article. `jhu-titles.csv` can be shared with learners, and the code to scrape the information can be shared post-session for those that are interested. There are still some data cleaning aspects remaining (years are integers).
+:::
 
 ## Retrieving the IMDB titles that correspond to the titles listed in `jhu-titles.csv`
 
-This is more challenging than you might expect – there are a number of duplicate titles for some of the JHU titles, so we need to do a little data cleaning, as well as some manual data exploration. 
+::: aside
+This is more challenging than you might expect – there are a number of duplicate titles for some of the JHU titles, so we need to do a little data cleaning, as well as some manual data exploration.
 
-The IMDB tabular data is large, so I use `duckdb` here to allow me to treat them as a SQL database. 
+The IMDB tabular data is large, so I use `duckdb` here to allow me to treat them as a SQL database.
+:::
 
 ```{python}
 con = duckdb.connect()
 ```
 
+```{python}
+## Create a dataframe of random titles from the IMDB title.basics.tsv
+## to  
+con = duckdb.connect()
+
+random_titles = con.execute(
+    """
+    SELECT *
+    FROM (
+        SELECT tconst, titleType, primaryTitle, startYear, endYear, runtimeMinutes, genres
+        FROM read_csv_auto(
+        "./data/title.basics.tsv",
+        header=True,
+        nullstr="\\N")
+    WHERE isAdult = 0)
+    USING SAMPLE 1000;
+    """
+).fetchdf()
+```
+
 Query matching titles
+
 ```{python}
 # Query for rows in IMDB title basics where the corresponding 
 # title and year are present for the titles scraped from the JHU site
-titles = con.execute(
+jhu_titles_imdb = con.execute(
     """
-    SELECT *
+    SELECT tconst, titleType, primaryTitle, startYear, endYear, runtimeMinutes, genres
     FROM read_csv_auto(
     "./data/title.basics.tsv", 
     header=True,
@@ -67,19 +96,33 @@ titles = con.execute(
     WHERE tb.startYear = td.Year
     """
 ).fetchdf()
-titles.to_csv('data/cleaned/imdb-title-matches.csv', index=False)
+#titles.to_csv('data/cleaned/imdb-title-matches.csv', index=False)
+show(
+    titles,
+    scrollX=True,
+    pageLength=5
+)
 ```
 
-## Selecting matching titles
+::: aside
+Here we generate a list of 24 matching titles. This is a good data cleaning task, as we have a number of duplicate titles. Year is a good way to match to the correct title here, so some joins with conditionals on date would be a good way to filter to relevant titles, for our learners. We can give them the dirty list of matches as a csv. This let's us avoid issues with memory, or the odd nullstring IMDB is using (`\N`).
+:::
+
+```{python}
+## Merge our random titles with our JHU titles to provide a toy dataset to work with.
+imdb_title_basics_subset = pd.concat([random_titles, jhu_titles_imdb]).sample(frac=1, random_state=42)
+imdb_ratings = pd.read_csv('data/title.ratings.tsv', sep='\t')
+
+imdb_title_basics_subset.to_csv('data/cleaned/imdb-title-basics.csv', index=False)
+imdb_ratings.to_csv('data/cleaned/imdb-ratings.csv', index=False)
 
 
-
-Multiple joins with CTE's
+```
 
 ```{python}
 # Query for rows in IMDB title basics where the corresponding
 # title and year are present for the titles scraped from the JHU site
-df = con.execute(
+imdb_jhu_matches = con.execute(
     """
     WITH tb AS(
     SELECT *
@@ -109,16 +152,66 @@ df = con.execute(
     FROM tr
     """
 ).fetchdf()
-
+show(
+    imdb_jhu_matches,
+    scrollX=True,
+    pageLength=13
+)
 ```
 
-Data cleaning - find unique title and category
+## Selecting matching titles
+
+Multiple joins with CTE's
 
 ```{python}
-df['startYear'] = pd.to_datetime(df['startYear'], format='%Y', errors='coerce')
-df['endYear'] = pd.to_datetime(df['endYear'], format='%Y', errors='coerce')
+# Query for rows in IMDB title basics where the corresponding
+# title and year are present for the titles scraped from the JHU site
+imdb_jhu_matches = con.execute(
+    """
+    WITH tb AS(
+    SELECT *
+    FROM read_csv_auto(
+        "./data/title.basics.tsv", 
+        header=True,
+        nullstr="\\N"
+    ) as titles_basics
+    JOIN titles_data 
+    ON titles_basics.originalTitle = titles_data.Title
+    WHERE titles_basics.startYear = titles_data.Year),
+
+    tr AS(
+        SELECT 
+        tb.*,
+        tr.averageRating,
+        tr.numVotes 
+    FROM tb
+    JOIN read_csv_auto(
+        "./data/title.ratings.tsv",
+        header=True,
+        nullstr="\\N"
+    ) as tr
+    ON tb.tconst = tr.tconst
+    )
+    SELECT *
+    FROM tr
+    """
+).fetchdf()
+show(
+    imdb_jhu_matches,
+    scrollX=True,
+    pageLength=13
+)
+```
+
+::: aside
+`title.basics.tsv` is is pretty large here (1 GB). Here I use SQL to filter titles to the relevant year, and join to IMDB ratings. A good option here would be to create a random subset of the `title.basics.tsv`, that also includes all the records from our JHU titles. Then our learners can join on IMDB ratings (that's \~ 30 MB so not bad)
+:::
+
+```{python}
+imdb_jhu_matches['startYear'] = pd.to_datetime(imdb_jhu_matches['startYear'], format='%Y', errors='coerce')
+imdb_jhu_matches['endYear'] = pd.to_datetime(imdb_jhu_matches['endYear'], format='%Y', errors='coerce')
 # Locate first year of title, for all title and title type combinations
-df.loc[df.groupby(['titleType', 'primaryTitle']).startYear.idxmin().dropna()]
+imdb_jhu_matches.loc[imdb_jhu_matches.groupby(['titleType', 'primaryTitle']).startYear.idxmin().dropna()]
 
 #Questions:
 #- For TV shows, do we return an average rating across all seasons/episodes?
@@ -131,17 +224,15 @@ title_rt_scores = rt_scores[rt_scores['title'].isin(titles)]
 
 Questions/Comments
 
-- Many titles missing in Rotten Tomatoes scores.
-- How do we disambiguate House of Cards show from 1968 movie.
-  
-Scrape rotten tomatoes for individual titles:
+-   Many titles missing in Rotten Tomatoes scores.
+-   How do we disambiguate House of Cards show from 1968 movie.
 
+Scrape rotten tomatoes for individual titles:
 
 ```{python}
 response = requests.get('https://www.rottentomatoes.com/tv/house-of-cards')
 soup = BeautifulSoup(response.content, 'html.parser')
 ```
-
 
 ```{python}
 critics_score = soup.find("rt-text", attrs={"slot": "criticsScore", "role":"button"}).get_text(strip=True)
@@ -149,9 +240,7 @@ critics_score = soup.find("rt-text", attrs={"slot": "criticsScore", "role":"butt
 audience_score = soup.find("rt-text", attrs={"slot": "audienceScore", "role":"button"}).get_text(strip=True)
 ```
 
-Breadcrumbs:
-- Turn scraper into function.
-- Add TV or Movie to titles, as Rotten Tomatos URLs are either m or tv depending, i.e. https://www.rottentomatoes.com/tv/house_of_cards
+Breadcrumbs: - Turn scraper into function. - Add TV or Movie to titles, as Rotten Tomatos URLs are either m or tv depending, i.e. https://www.rottentomatoes.com/tv/house_of_cards
 
 ```{python}
 
@@ -167,11 +256,10 @@ def url_constructor(title, medium):
 
 ```{python}
 rt_urls = []
-for title, med in zip(titles, medium):
+for title, med in zip(titles_data["Title"], medium):
     url = url_constructor(title, med)
     rt_urls.append(url) 
 ```
-
 
 ```{python}
 def get_rt_ratings(url):
@@ -185,7 +273,6 @@ def get_rt_ratings(url):
     except requests.exceptions.HTTPError as err:
         return {'critics': None,'audience': None}
 ```
-
 
 ```{python}
 audience_scores = []
@@ -205,4 +292,7 @@ data = {"media": titles,
 "critics_scores": critics_scores}
 
 df = pd.DataFrame(data)
+show(
+    df
+)
 ```
